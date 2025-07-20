@@ -30,7 +30,33 @@
      - 再帰呼び出し
      - 条件付きエフェクト
 
+4. **テストハーネスとユーティリティのセットアップ** ✅
+   - analyzer/testutil/testutil.go: テスト用ユーティリティ関数
+     - ParseFile: ソースコードのパース
+     - ExtractDirtyComment: エフェクトコメントの抽出
+     - ParseEffectsFromComment: エフェクトのパース
+     - AssertEffects: エフェクトの比較
+   - Makefile: ビルドとテストの自動化
+     - build, test, install, clean
+     - check-examples: サンプルコードでの実行
+     - coverage: カバレッジレポート生成
+   - scripts/test.sh: テスト実行スクリプト
+
+### テスト環境の完成
+すべてのテスト環境構築タスクが完了しました。以下のコマンドでテストを実行できます：
+
+```bash
+# すべてのテストを実行
+make test
+
+# テストスクリプトを使用
+./scripts/test.sh
+
+# サンプルコードでアナライザーを実行
+make check-examples
+```
+
 ### 次のステップ
-- テストユーティリティの実装
 - エフェクトパーサーの実装
-- 実際のテスト実行環境の整備
+- エフェクトチェッカーの実装
+- 実際のテストケースの動作確認
