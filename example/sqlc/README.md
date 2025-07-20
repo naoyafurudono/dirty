@@ -38,7 +38,7 @@ DIRTY_SQLC_JSON=example/sqlc/query-table-operations.json dirty ./example/sqlc
 ### サービス層での使用例
 
 ```go
-//dirty: select[users], insert[audit_logs]
+// dirty: select[users], insert[audit_logs]
 func GetUserWithAuditLog(ctx context.Context, q *Queries, userID int64) (*User, error) {
     // q.GetUser() は自動的に select[users] エフェクトが検出される
     user, err := q.GetUser(ctx, userID)
@@ -51,7 +51,7 @@ func GetUserWithAuditLog(ctx context.Context, q *Queries, userID int64) (*User, 
 `BrokenGetUser`関数は`select[users]`エフェクトを宣言していないため、dirtyがエラーを報告します：
 
 ```go
-//dirty: insert[audit_logs]  // ❌ select[users]が不足
+// dirty: insert[audit_logs]  // ❌ select[users]が不足
 func BrokenGetUser(ctx context.Context, q *Queries, userID int64) (*User, error) {
     user, err := q.GetUser(ctx, userID)  // エラー: select[users]が未宣言
     // ...

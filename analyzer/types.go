@@ -10,9 +10,9 @@ import (
 type FunctionInfo struct {
 	Name            string
 	Package         string
-	DeclaredEffects StringSet // Effects declared via //dirty: comment
+	DeclaredEffects StringSet // Effects declared via // dirty: comment
 	ComputedEffects StringSet // Actual effects including those from called functions
-	HasDeclaration  bool      // Whether function has //dirty: comment
+	HasDeclaration  bool      // Whether function has // dirty: comment
 	Decl            *ast.FuncDecl
 	CallSites       []CallSite // Functions called by this function
 }

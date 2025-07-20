@@ -28,22 +28,22 @@ func TestParseEffects(t *testing.T) {
 	}{
 		{
 			name:    "single effect",
-			comment: "//dirty: select[user]",
+			comment: "// dirty: select[user]",
 			want:    []string{"select[user]"},
 		},
 		{
 			name:    "multiple effects",
-			comment: "//dirty: select[user], insert[log]",
+			comment: "// dirty: select[user], insert[log]",
 			want:    []string{"select[user]", "insert[log]"},
 		},
 		{
 			name:    "effects with spaces",
-			comment: "//dirty: select[user] , update[member] , delete[session]",
+			comment: "// dirty: select[user] , update[member] , delete[session]",
 			want:    []string{"select[user]", "update[member]", "delete[session]"},
 		},
 		{
 			name:    "empty effects",
-			comment: "//dirty:",
+			comment: "// dirty:",
 			want:    []string{},
 		},
 		{

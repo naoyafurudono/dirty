@@ -52,7 +52,7 @@ func (ea *EffectAnalysis) CollectFunctions() {
 			CallSites:       []CallSite{},
 		}
 
-		// Extract effects from //dirty: comment
+		// Extract effects from // dirty: comment
 		if fn.Doc != nil {
 			for _, comment := range fn.Doc.List {
 				if effects := ParseEffects(comment.Text); effects != nil {

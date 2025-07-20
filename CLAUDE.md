@@ -4,15 +4,15 @@ This file provides guidance to Claude Code when working with this repository.
 
 ## Project Overview
 
-"dirty" is an effect system for Go implemented as a static analysis tool. It tracks function side effects through `//dirty:` comment annotations.
+"dirty" is an effect system for Go implemented as a static analysis tool. It tracks function side effects through `// dirty:` comment annotations.
 
 ## Key Concepts
 
 ```go
-//dirty: select[user]
+// dirty: select[user]
 func GetUser(id int64) (User, error) { ... }
 
-//dirty: select[user], select[member]
+// dirty: select[user], select[member]
 func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 ```
 

@@ -63,15 +63,14 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
-
-// ParseEffects extracts effects from a //dirty: comment
+// ParseEffects extracts effects from a // dirty: comment
 func ParseEffects(comment string) []string {
 	comment = strings.TrimSpace(comment)
-	if !strings.HasPrefix(comment, "//dirty:") {
+	if !strings.HasPrefix(comment, "// dirty:") {
 		return nil
 	}
 
-	effectStr := strings.TrimPrefix(comment, "//dirty:")
+	effectStr := strings.TrimPrefix(comment, "// dirty:")
 	effectStr = strings.TrimSpace(effectStr)
 
 	if effectStr == "" {

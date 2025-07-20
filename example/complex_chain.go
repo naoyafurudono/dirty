@@ -1,17 +1,17 @@
 package example
 
 // Base effects
-//dirty: select[config]
+// dirty: select[config]
 func LoadConfig() error {
 	return nil
 }
 
-//dirty: select[user]
+// dirty: select[user]
 func GetUserData(id int64) error {
 	return nil
 }
 
-//dirty: insert[audit]
+// dirty: insert[audit]
 func WriteAuditLog(msg string) error {
 	return nil
 }
@@ -41,7 +41,7 @@ func ComplexOperation(id int64) error {
 }
 
 // エラー: 深い呼び出しチェーンのエフェクトが不足
-//dirty: insert[audit]
+// dirty: insert[audit]
 func BrokenDeepChain(id int64) error {
 	// ComplexOperationは以下のエフェクトを持つ:
 	// - select[config] (LoadConfig経由)

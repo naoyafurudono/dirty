@@ -76,7 +76,7 @@ func (e *EffectError) Format() string {
 	b.WriteString("\n")
 	b.WriteString("  To fix, add the missing effects to the function declaration:\n")
 	allEffects := combineEffects(e.CallerEffects, e.MissingEffects)
-	b.WriteString(fmt.Sprintf("    //dirty: %s\n", strings.Join(allEffects, ", ")))
+	b.WriteString(fmt.Sprintf("    // dirty: %s\n", strings.Join(allEffects, ", ")))
 
 	return b.String()
 }

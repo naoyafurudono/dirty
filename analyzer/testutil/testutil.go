@@ -20,7 +20,7 @@ func ParseFile(t *testing.T, src string) (*ast.File, *token.FileSet) {
 	return file, fset
 }
 
-// ExtractDirtyComment extracts the //dirty: comment from a function declaration
+// ExtractDirtyComment extracts the // dirty: comment from a function declaration
 func ExtractDirtyComment(fn *ast.FuncDecl) string {
 	if fn.Doc == nil {
 		return ""
@@ -28,7 +28,7 @@ func ExtractDirtyComment(fn *ast.FuncDecl) string {
 
 	for _, comment := range fn.Doc.List {
 		text := strings.TrimSpace(comment.Text)
-		if strings.HasPrefix(text, "//dirty:") {
+		if strings.HasPrefix(text, "// dirty:") {
 			return text
 		}
 	}
@@ -51,15 +51,15 @@ func AssertEffects(t *testing.T, got, want []string) {
 	}
 }
 
-// ParseEffectsFromComment parses effects from a //dirty: comment
+// ParseEffectsFromComment parses effects from a // dirty: comment
 func ParseEffectsFromComment(comment string) ([]string, error) {
-	// Remove //dirty: prefix
+	// Remove // dirty: prefix
 	comment = strings.TrimSpace(comment)
-	if !strings.HasPrefix(comment, "//dirty:") {
+	if !strings.HasPrefix(comment, "// dirty:") {
 		return nil, fmt.Errorf("not a dirty comment: %s", comment)
 	}
 
-	comment = strings.TrimPrefix(comment, "//dirty:")
+	comment = strings.TrimPrefix(comment, "// dirty:")
 	comment = strings.TrimSpace(comment)
 
 	if comment == "" {

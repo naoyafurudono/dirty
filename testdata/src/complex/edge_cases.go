@@ -3,39 +3,39 @@ package complex
 // Test case: edge cases and special scenarios
 
 // Multiple effects on same target
-//dirty: select[user], update[user], delete[user]
+// dirty: select[user], update[user], delete[user]
 func ManageUser(id int64, action string) error {
 	// Various operations on user table
 	return nil
 }
 
 // Empty effect declaration (should be valid but warns about missing effects from calls)
-//dirty:
+// dirty:
 func EmptyEffectDeclaration() error {
 	return ManageUser(1, "delete") // want "function calls ManageUser which has effects \\[delete\\[user\\], select\\[user\\], update\\[user\\]\\] not declared in this function"
 }
 
 // No effect comment at all - not checked
 func NoEffectComment() error {
-	return ManageUser(1, "update") // No error - function has no //dirty: comment
+	return ManageUser(1, "update") // No error - function has no // dirty: comment
 }
 
 // Malformed effect syntax (should be reported as error)
-//dirty: select(user)
+// dirty: select(user)
 func MalformedEffect() error {
 	// Should report syntax error for using () instead of []
 	return nil
 }
 
 // Effect with special characters in target
-//dirty: select[user_profile], update[user-settings], insert[user.preferences]
+// dirty: select[user_profile], update[user-settings], insert[user.preferences]
 func SpecialCharacterTargets() error {
 	// Valid: underscores, hyphens, dots in target names
 	return nil
 }
 
 // Recursive call
-//dirty: select[tree_node]
+// dirty: select[tree_node]
 func TraverseTree(nodeID int64) error {
 	// Base case
 	if nodeID == 0 {
@@ -47,7 +47,7 @@ func TraverseTree(nodeID int64) error {
 }
 
 // Conditional effects
-//dirty: select[user], select[admin], insert[log]
+// dirty: select[user], select[admin], insert[log]
 func ConditionalEffects(isAdmin bool, userID int64) error {
 	if isAdmin {
 		// SELECT * FROM admin WHERE id = ?

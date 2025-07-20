@@ -3,13 +3,13 @@ package implicit
 // Test case: implicit effect propagation through functions without declarations
 
 // Base functions with effects
-//dirty: select[user]
+// dirty: select[user]
 func GetUser(id int64) error {
 	// SELECT * FROM users WHERE id = ?
 	return nil
 }
 
-//dirty: insert[log]
+// dirty: insert[log]
 func LogAction(action string) error {
 	// INSERT INTO logs (action) VALUES (?)
 	return nil
@@ -24,7 +24,7 @@ func GetUserAndLog(id int64) error {
 }
 
 // Valid: declares all effects including those from implicit function
-//dirty: select[user], insert[log], select[session]
+// dirty: select[user], insert[log], select[session]
 func ValidCaller(userID int64) error {
 	// This has its own effect
 	// SELECT * FROM sessions WHERE user_id = ?
@@ -34,7 +34,7 @@ func ValidCaller(userID int64) error {
 }
 
 // Invalid: missing effects from implicit function
-//dirty: select[session]
+// dirty: select[session]
 func InvalidCaller(userID int64) error {
 	// SELECT * FROM sessions WHERE user_id = ?
 
@@ -56,7 +56,7 @@ func ChainC() error {
 }
 
 // Invalid: missing effect from deep chain
-//dirty: insert[log]
+// dirty: insert[log]
 func InvalidChain() error {
 	LogAction("start")
 	return ChainC() // want "function calls ChainC which has effects \\[select\\[user\\]\\] not declared in this function"
@@ -73,7 +73,7 @@ func CircularB() error {
 }
 
 // Invalid: missing effect from circular dependency
-//dirty: insert[log]
+// dirty: insert[log]
 func InvalidCircular() error {
 	LogAction("circular")
 	return CircularA() // want "function calls CircularA which has effects \\[select\\[user\\]\\] not declared in this function"

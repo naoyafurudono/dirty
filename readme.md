@@ -7,11 +7,11 @@ dirtyはGo言語向けのエフェクトシステムもどきです。vetツー�
 関数宣言では、それが起こすエフェクトを表明できます。
 
 ```go
-//dirty: select[user] select[organization] insert[member]
+// dirty: select[user] select[organization] insert[member]
 func f() {}
 ```
 
-上記のように `//dirty: ` から始まるスペース区切りのエフェクトラベルの列が、その関数が起こすエフェクトです。
+上記のように `// dirty: ` から始まるスペース区切りのエフェクトラベルの列が、その関数が起こすエフェクトです。
 dirtyではエフェクトラベルの集合として解釈されます。つまり、重複や順序は無視されます。
 
 ## 検査
@@ -22,7 +22,7 @@ dirtyはモジュール内の関数宣言を走査しエフェクトの表明が
 そのため、okのエフェクトはfのエフェクトのスーパーセットである必要があります。
 
 ```go
-//dirty: select[user] select[organization] insert[member] insert[user]
+// dirty: select[user] select[organization] insert[member] insert[user]
 func ok() {
 	...
 	f()
@@ -33,7 +33,7 @@ func ok() {
 したがって、以下のようにfのエフェクトを包含しないエフェクトしか表明しない場合は、エフェクトの検査が失敗します。
 
 ```go
-//dirty: select[user]
+// dirty: select[user]
 func ng() {
 	...
 	f()
@@ -50,14 +50,14 @@ func implicit() {
 	...
 }
 
-//dirty: select[user] select[organization] insert[member] insert[user]
+// dirty: select[user] select[organization] insert[member] insert[user]
 func ok() {
 	...
 	implicit()
 	...
 }
 
-//dirty: select[user]
+// dirty: select[user]
 func ng() {
 	...
 	implicit()
@@ -155,7 +155,7 @@ example/simple.go:43:12: function calls HelperFunction which has effects [select
          effects: [select[user]]
 
   To fix, add the missing effects to the function declaration:
-    //dirty: insert[log], select[user]
+    // dirty: insert[log], select[user]
 ```
 
 ## sqlc-use との統合
@@ -243,7 +243,7 @@ dirtyは以下の条件で関数を認識します：
 
 #### 3. エフェクトの適用
 
-SQLCから読み込まれたエフェクトは、その関数に`//dirty:`宣言があるかのように扱われます：
+SQLCから読み込まれたエフェクトは、その関数に`// dirty:`宣言があるかのように扱われます：
 
 ```go
 // JSONに "GetUser": [{"operation": "select", "table": "users"}] がある場合
@@ -251,7 +251,7 @@ SQLCから読み込まれたエフェクトは、その関数に`//dirty:`宣言
 // 以下の2つは同等に扱われる：
 func (q *Queries) GetUser(ctx context.Context, id int64) (User, error)
 
-//dirty: select[users]
+// dirty: select[users]
 func (q *Queries) GetUser(ctx context.Context, id int64) (User, error)
 ```
 
@@ -266,7 +266,7 @@ sqlc-use analyze > query-table-operations.json
 2. dirtyでの検証:
 
 ```go
-//dirty: select[users], insert[logs]
+// dirty: select[users], insert[logs]
 func ProcessUser(ctx context.Context, q *Queries, id int64) error {
     user, err := q.GetUser(ctx, id)  // ✓ select[users] は宣言済み
     if err != nil {
@@ -275,7 +275,7 @@ func ProcessUser(ctx context.Context, q *Queries, id int64) error {
     return logAccess(user.ID)  // ✓ insert[logs] は宣言済み
 }
 
-//dirty: insert[logs]
+// dirty: insert[logs]
 func BrokenFunction(ctx context.Context, q *Queries, id int64) error {
     user, err := q.GetUser(ctx, id)  // ✗ エラー: select[users] が未宣言
     return err
@@ -297,7 +297,7 @@ func BrokenFunction(ctx context.Context, q *Queries, id int64) error {
 
 ### 制限事項
 
-- **ローカル定義優先**: パッケージ内に同名の関数が定義されている場合、その関数の`//dirty:`宣言が優先されます
+- **ローカル定義優先**: パッケージ内に同名の関数が定義されている場合、その関数の`// dirty:`宣言が優先されます
 - **エラー無視**: JSONファイルの読み込みエラーは警告なしに無視されます（dirtyの実行は継続）
 - **大文字小文字の区別**: 関数名は大文字小文字を区別します
 
