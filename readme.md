@@ -127,12 +127,14 @@ vet:
 ### エラー出力の例
 
 通常モード:
+
 ```bash
 $ dirty ./...
 example/simple.go:29:12: function calls GetUserByID which has effects [select[user]] not declared in this function
 ```
 
 詳細モード（環境変数 `DIRTY_VERBOSE=1` を設定）:
+
 ```bash
 $ DIRTY_VERBOSE=1 dirty ./...
 example/simple.go:43:12: function calls HelperFunction which has effects [select[user]] not declared in this function
@@ -196,30 +198,26 @@ sqlc-useが生成するJSONファイルは以下の形式である必要があ�
 ```
 
 **フィールド説明：**
+
 - **関数名**: SQLCで生成された関数名（完全一致）
 - **operation**: `select`, `insert`, `update`, `delete` のいずれか
 - **table**: 操作対象のテーブル名
 
 **具体例：**
+
 ```json
 {
-  "GetUser": [
-    {"operation": "select", "table": "users"}
-  ],
+  "GetUser": [{ "operation": "select", "table": "users" }],
   "GetUserWithPosts": [
-    {"operation": "select", "table": "users"},
-    {"operation": "select", "table": "posts"}
+    { "operation": "select", "table": "users" },
+    { "operation": "select", "table": "posts" }
   ],
   "CreateUserWithAudit": [
-    {"operation": "insert", "table": "users"},
-    {"operation": "insert", "table": "audit_logs"}
+    { "operation": "insert", "table": "users" },
+    { "operation": "insert", "table": "audit_logs" }
   ],
-  "UpdateUserStatus": [
-    {"operation": "update", "table": "users"}
-  ],
-  "DeleteSession": [
-    {"operation": "delete", "table": "sessions"}
-  ]
+  "UpdateUserStatus": [{ "operation": "update", "table": "users" }],
+  "DeleteSession": [{ "operation": "delete", "table": "sessions" }]
 }
 ```
 
@@ -230,15 +228,16 @@ sqlc-useが生成するJSONファイルは以下の形式である必要があ�
 JSONの操作はdirtyのエフェクトラベルに以下のように変換されます：
 
 | operation | table | dirtyエフェクト |
-|-----------|-------|----------------|
-| select    | users | select[users]  |
-| insert    | logs  | insert[logs]   |
-| update    | posts | update[posts]  |
-| delete    | auth  | delete[auth]   |
+| --------- | ----- | --------------- |
+| select    | users | select[users]   |
+| insert    | logs  | insert[logs]    |
+| update    | posts | update[posts]   |
+| delete    | auth  | delete[auth]    |
 
 #### 2. 関数の認識
 
 dirtyは以下の条件で関数を認識します：
+
 - メソッド名が完全一致する（例：`q.GetUser()` → `GetUser`）
 - 通常の関数呼び出しも同様（例：`GetUser()` → `GetUser`）
 
@@ -259,11 +258,13 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error)
 ### 使用例
 
 1. sqlc-useでクエリを解析:
+
 ```bash
 sqlc-use analyze > query-table-operations.json
 ```
 
 2. dirtyでの検証:
+
 ```go
 //dirty: select[users], insert[logs]
 func ProcessUser(ctx context.Context, q *Queries, id int64) error {
