@@ -1,0 +1,48 @@
+linters:
+  enable:
+    - gofmt
+    - goimports
+    - govet
+    - errcheck
+    - staticcheck
+    - gosimple
+    - ineffassign
+    - unused
+    - misspell
+    - unconvert
+    - prealloc
+    - nakedret
+    - gocyclo
+    - dupl
+    - gosec
+    - asciicheck
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  dupl:
+    threshold: 100
+  govet:
+    check-shadowing: true
+  misspell:
+    locale: US
+  prealloc:
+    simple: true
+    range-loops: true
+    for-loops: true
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl
+        - gosec
+    - path: testdata/
+      linters:
+        - all
+
+run:
+  skip-dirs:
+    - testdata
+    - vendor
+  timeout: 5m
