@@ -126,7 +126,7 @@ Where:
 
 The schema is designed to be extensible. Future versions might support:
 - Effect references: `{ $common_effects | custom[operation] }`
-- Effect operators: `{ (A | B) & C }`
+- Effect operators: `(A | B) & C`
 - Effect parameters: `{ network[api, timeout=30s] }`
 
 The `version` field ensures backward compatibility when introducing new features.
