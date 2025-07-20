@@ -48,7 +48,7 @@ func (s *UserService) UpdateUserWithAudit(id int64, name string) error {
 // Invalid: missing select[user] effect
 //dirty: update[user]
 func (s *UserService) UpdateUserBroken(id int64, name string) error {
-	if err := s.repo.FindByID(id); err != nil { // want "method calls FindByID which has effect select\\[user\\] not declared in this function"
+	if err := s.repo.FindByID(id); err != nil { // want "function calls FindByID which has effects \\[select\\[user\\]\\] not declared in this function"
 		return err
 	}
 	

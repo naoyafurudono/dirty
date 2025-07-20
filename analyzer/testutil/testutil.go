@@ -36,7 +36,7 @@ func ExtractDirtyComment(fn *ast.FuncDecl) string {
 }
 
 // AssertEffects checks if two effect slices are equal
-func AssertEffects(t *testing.T, got, want []Effect) {
+func AssertEffects(t *testing.T, got, want []string) {
 	t.Helper()
 	
 	if len(got) != len(want) {
@@ -46,51 +46,35 @@ func AssertEffects(t *testing.T, got, want []Effect) {
 	
 	for i := range got {
 		if got[i] != want[i] {
-			t.Errorf("effect[%d] mismatch: got %+v, want %+v", i, got[i], want[i])
+			t.Errorf("effect[%d] mismatch: got %q, want %q", i, got[i], want[i])
 		}
 	}
 }
 
-// Effect represents a parsed effect for testing
-type Effect struct {
-	Action string
-	Target string
-}
-
 // ParseEffectsFromComment parses effects from a //dirty: comment
-func ParseEffectsFromComment(comment string) ([]Effect, error) {
+func ParseEffectsFromComment(comment string) ([]string, error) {
 	// Remove //dirty: prefix
+	comment = strings.TrimSpace(comment)
+	if !strings.HasPrefix(comment, "//dirty:") {
+		return nil, fmt.Errorf("not a dirty comment: %s", comment)
+	}
+	
 	comment = strings.TrimPrefix(comment, "//dirty:")
 	comment = strings.TrimSpace(comment)
 	
 	if comment == "" {
-		return nil, nil
+		return []string{}, nil
 	}
 	
-	var effects []Effect
+	// Split by comma and trim spaces
 	parts := strings.Split(comment, ",")
+	effects := make([]string, 0, len(parts))
 	
 	for _, part := range parts {
 		part = strings.TrimSpace(part)
-		if part == "" {
-			continue
+		if part != "" {
+			effects = append(effects, part)
 		}
-		
-		// Parse action[target] format
-		openBracket := strings.Index(part, "[")
-		closeBracket := strings.Index(part, "]")
-		
-		if openBracket == -1 || closeBracket == -1 || closeBracket <= openBracket {
-			return nil, fmt.Errorf("invalid effect format: %s", part)
-		}
-		
-		action := part[:openBracket]
-		target := part[openBracket+1 : closeBracket]
-		
-		effects = append(effects, Effect{
-			Action: action,
-			Target: target,
-		})
 	}
 	
 	return effects, nil

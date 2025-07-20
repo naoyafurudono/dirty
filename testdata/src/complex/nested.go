@@ -42,7 +42,7 @@ func InitializeUserSession(userID int64) error {
 // Invalid: missing config effect
 //dirty: select[user], insert[audit_log]
 func InitializeUserSessionBroken(userID int64) error {
-	if err := LoadConfig(); err != nil { // want "function calls LoadConfig which has effect select\\[config\\] not declared in this function"
+	if err := LoadConfig(); err != nil { // want "function calls LoadConfig which has effects \\[select\\[config\\]\\] not declared in this function"
 		return err
 	}
 	

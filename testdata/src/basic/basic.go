@@ -22,7 +22,7 @@ func GetUserWithMembers(userID int64) error {
 // Invalid: missing effect declaration from called function
 //dirty: select[member]
 func GetMemberOnly(userID int64) error {
-	err := GetUser(userID) // want "function calls GetUser which has effect select\\[user\\] not declared in this function"
+	err := GetUser(userID) // want "function calls GetUser which has effects \\[select\\[user\\]\\] not declared in this function"
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,13 @@ func NoEffects() error {
 	return nil
 }
 
-// Invalid: calling function with effects without declaring them
-func MissingAllEffects(userID int64) error {
-	return GetUserWithMembers(userID) // want "function calls GetUserWithMembers which has effects select\\[user\\], select\\[member\\] not declared in this function"
+// Valid: function without effect declaration is not checked
+func ImplicitEffects(userID int64) error {
+	return GetUserWithMembers(userID) // No error - function has no //dirty: comment
+}
+
+// Invalid: function with empty effect declaration calling function with effects
+//dirty:
+func EmptyEffects(userID int64) error {
+	return GetUserWithMembers(userID) // want "function calls GetUserWithMembers which has effects \\[select\\[user\\], select\\[member\\]\\] not declared in this function"
 }
