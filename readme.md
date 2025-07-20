@@ -68,6 +68,70 @@ func ng() {
 この例ではimplicitにエフェクトの表明はありません。そのためimplicitの表明に対する検証は行われません。ただしimplicitはfを呼び出すので、fのエフェクトを生じると扱われます。
 ok, ngではimplicitはfを呼び出すので、結果的にそれらはfのエフェクトを生じると扱われ、それぞれの表明に対する検証に反映されます。
 
+## インストール
+
+```bash
+go install github.com/naoyafurudono/dirty/cmd/dirty@latest
+```
+
+## 使い方
+
+### 基本的な使い方
+
+```bash
+# カレントパッケージをチェック
+dirty .
+
+# 特定のパッケージをチェック
+dirty ./pkg/...
+
+# すべてのパッケージをチェック
+dirty ./...
+```
+
+### go vetツールとして使用
+
+```bash
+# vet-dirtyをインストール
+go install github.com/naoyafurudono/dirty/cmd/vet-dirty@latest
+
+# go vetのカスタムツールとして実行
+go vet -vettool=$(go env GOPATH)/bin/vet-dirty ./...
+```
+
+### Makefileでの使用例
+
+```makefile
+.PHONY: lint
+lint:
+	go vet ./...
+	dirty ./...
+
+# または
+.PHONY: vet
+vet:
+	go vet -vettool=$$(go env GOPATH)/bin/vet-dirty ./...
+```
+
+### CI/CDでの使用例
+
+```yaml
+# GitHub Actions
+- name: Install dirty
+  run: go install github.com/naoyafurudono/dirty/cmd/dirty@latest
+
+- name: Run dirty analyzer
+  run: dirty ./...
+```
+
+### エラー出力の例
+
+```bash
+$ dirty ./...
+example/simple.go:29:12: function calls GetUserByID which has effects [select[user]] not declared in this function
+example/simple.go:43:12: function calls HelperFunction which has effects [select[user]] not declared in this function
+```
+
 ## 制限
 
 実装をするのが面倒なので、今は色々な実装上のサボりをします。結果的に予期せぬ振る舞いがたくさん生じます。
