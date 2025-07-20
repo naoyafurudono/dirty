@@ -1,48 +1,31 @@
+version: "2"
+run:
+  tests: true
 linters:
+  enable:
+    - dupl
+    - gocritic
+    - gocyclo
+    - gosec
+    - misspell
+    - revive
+    - unconvert
+  settings:
+    dupl:
+      threshold: 100
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+    gocyclo:
+      min-complexity: 15
+    govet:
+      enable:
+        - shadow
+formatters:
   enable:
     - gofmt
     - goimports
-    - govet
-    - errcheck
-    - staticcheck
-    - gosimple
-    - ineffassign
-    - unused
-    - misspell
-    - unconvert
-    - prealloc
-    - nakedret
-    - gocyclo
-    - dupl
-    - gosec
-    - asciicheck
-
-linters-settings:
-  gocyclo:
-    min-complexity: 15
-  dupl:
-    threshold: 100
-  govet:
-    check-shadowing: true
-  misspell:
-    locale: US
-  prealloc:
-    simple: true
-    range-loops: true
-    for-loops: true
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - dupl
-        - gosec
-    - path: testdata/
-      linters:
-        - all
-
-run:
-  skip-dirs:
-    - testdata
-    - vendor
-  timeout: 5m
