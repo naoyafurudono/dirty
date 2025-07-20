@@ -48,3 +48,8 @@ DESIGN.md       # Architecture details
 Run tests with: `make test` or `go test ./...`
 
 Keep code base to pass all tests.
+
+## Release
+
+Increment git tag version when new feature added.
+
