@@ -191,3 +191,25 @@ READMEにsqlc-use統合の詳細なドキュメントを追加：
 - パフォーマンス最適化
 - クロスパッケージ解析
 - 更なる文法拡張（Phase 2: エフェクト参照、演算子など）
+
+## 2025-07-20（続き3）
+
+### sqlc/sqlc-use参照のクリーンアップ ✅
+
+1. **実施内容**
+   - 全コードベースからsqlc/sqlc-use関連の参照を削除
+   - 主要ドキュメントから古い統合に関する記述を削除
+   - 開発ログの歴史的記録は保持（プロジェクトの進化の記録として）
+
+2. **削除した参照**
+   - `CLAUDE.md`: "replaced sqlc-use" の記述を削除
+   - `readme.md`: sqlc-use統合例のセクション全体を削除
+   - `DESIGN.md`: sqlc-use統合のセクション全体を削除
+   - `docs/README.md`: 存在しない`sqlc-integration.md`へのリンクを削除
+   - `docs/json-effect-declaration-design.md`: sqlc関連の記述を汎用的な表現に変更
+   - `example/jsoneffects/README.md`: SQLCの具体的な言及を削除
+
+3. **現在の状態**
+   - 汎用的なJSONベースのエフェクト宣言システムとして完全に独立
+   - 任意の外部ツールと統合可能な設計
+   - 過去のsqlc-use統合の痕跡は完全に除去
