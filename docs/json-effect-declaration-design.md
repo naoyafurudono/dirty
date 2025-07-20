@@ -1,4 +1,4 @@
-# JSONベースのエフェクト宣言インターフェース設計
+# Effect Registry設計
 
 ## 概要
 
@@ -170,12 +170,12 @@ func ProcessPayment(amount float64) error {
 
 ## 実装ステップ
 
-1. **新しいJSON形式の実装**
+1. **Effect Registryの実装**
    - `effect_declarations.go`の作成
    - パーサーとローダーの実装
 
 2. **アナライザーの更新**
-   - JSONエフェクトの読み込み
+   - Effect Registryの読み込み
    - 優先順位の実装
 
 3. **テストとドキュメント**

@@ -202,7 +202,7 @@ dirtyはJSONファイルから関数のエフェクトを宣言できます。�
 dirtyは以下の順序でJSONファイルを検索します：
 
 1. **環境変数 `DIRTY_EFFECTS_JSON`** で指定されたパス（最優先）
-2. **解析対象パッケージディレクトリ**の `dirty-effects.json`
+2. **解析対象パッケージディレクトリ**の `effect-registry.json`
 
 ```bash
 # 方法1: 環境変数で明示的に指定
@@ -213,7 +213,7 @@ myproject/
 └── internal/
     └── db/
         ├── queries.go          # 解析対象のコード
-        └── dirty-effects.json  # エフェクト宣言
+        └── effect-registry.json  # エフェクトレジストリ
 ```
 
 ### 優先順位
@@ -229,7 +229,7 @@ myproject/
 #### 1. JSONファイルの作成
 
 ```bash
-cat > dirty-effects.json << EOF
+cat > effect-registry.json << EOF
 {
   "version": "1.0",
   "effects": {
@@ -274,7 +274,7 @@ func GetUser(id int64) (User, error) {
 # GitHub Actions
 - name: Create effect declarations
   run: |
-    cat > dirty-effects.json << EOF
+    cat > effect-registry.json << EOF
     {
       "version": "1.0",
       "effects": {
@@ -285,7 +285,7 @@ func GetUser(id int64) (User, error) {
     EOF
 
 - name: Run dirty with JSON effects
-  run: DIRTY_EFFECTS_JSON=dirty-effects.json dirty ./...
+  run: DIRTY_EFFECTS_JSON=effect-registry.json dirty ./...
 ```
 
 ### 制限事項

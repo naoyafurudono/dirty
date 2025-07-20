@@ -30,7 +30,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		// Try to find in package directory
 		if len(pass.Files) > 0 {
 			pkgDir := filepath.Dir(pass.Fset.Position(pass.Files[0].Pos()).Filename)
-			jsonPath = filepath.Join(pkgDir, "dirty-effects.json")
+			jsonPath = filepath.Join(pkgDir, "effect-registry.json")
 		}
 	}
 

@@ -143,7 +143,7 @@ READMEにsqlc-use統合の詳細なドキュメントを追加：
 
 ## 2025-01-20（続き）
 
-### JSONベースのエフェクト宣言インターフェースの実装 ✅
+### Effect Registry（旧JSONベースのエフェクト宣言）の実装 ✅
 
 1. **既存のSQLC統合を削除**
    - `sqlc_analyzer.go`と関連ファイルの削除
@@ -156,7 +156,7 @@ READMEにsqlc-use統合の詳細なドキュメントを追加：
 
 3. **アナライザーの更新**
    - `DIRTY_EFFECTS_JSON`環境変数のサポート
-   - パッケージディレクトリの`dirty-effects.json`自動検出
+   - パッケージディレクトリの`effect-registry.json`自動検出
 
 ## 2025-01-20（続き2）
 
@@ -179,9 +179,28 @@ READMEにsqlc-use統合の詳細なドキュメントを追加：
 4. **全sqlc関連記述の削除** 
    - 変換スクリプトや過去の形式への言及を全て削除
    - READMEやドキュメントから全てのsqlc参照を除去
-   - JSONエフェクト宣言を独立した汎用機能として再定義
+   - Effect Registryを独立した汎用機能として再定義
    - `example/jsoneffects/`ディレクトリに実例追加
    - READMEの大幅更新：新しいJSON形式の説明
+
+## 2025-01-20（続き3）
+
+### Effect Registryへの名称変更 ✅
+
+1. **名称変更の実施**
+   - `dirty-effects.json` → `effect-registry.json`
+   - JSONエフェクト宣言 → Effect Registry
+   - より意味を捉えた名前に変更
+
+2. **全ファイルの更新**
+   - ソースコード（analyzer.go, analyzer_test.go）
+   - ドキュメント（README, design docs）
+   - テストファイル・実例ファイル
+   - スキーマファイル名とその内容
+
+3. **テストの確認**
+   - 全テストがパスすることを確認
+   - Effect Registryとして正しく機能することを検証
 
 ### 技術的詳細
 - JSON形式：`{"version": "1.0", "effects": {"FuncName": "{ effect[target] }"}}`

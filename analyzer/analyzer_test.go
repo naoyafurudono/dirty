@@ -15,7 +15,7 @@ func TestAnalyzer(t *testing.T) {
 func TestAnalyzerWithJSONEffects(t *testing.T) {
 	// Set JSON effects for this test - use absolute path
 	testdata := analysistest.TestData()
-	jsonPath := testdata + "/src/jsoneffects/dirty-effects.json"
+	jsonPath := testdata + "/src/jsoneffects/effect-registry.json"
 	t.Setenv("DIRTY_EFFECTS_JSON", jsonPath)
 	analysistest.Run(t, testdata, analyzer.Analyzer, "jsoneffects")
 }

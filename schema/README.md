@@ -1,10 +1,10 @@
-# Dirty Effects JSON Schema
+# Effect Registry Schema
 
-This directory contains the JSON Schema definition for dirty effect declaration files.
+This directory contains the JSON Schema definition for Effect Registry files.
 
 ## Schema File
 
-- `dirty-effects.schema.json` - The official JSON Schema for `dirty-effects.json` files
+- `effect-registry.schema.json` - The official JSON Schema for `effect-registry.json` files
 
 ## Usage
 
@@ -19,7 +19,7 @@ You can use any JSON Schema validator to validate your effect declaration files.
 npm install -g ajv-cli
 
 # Validate a file
-ajv validate -s schema/dirty-effects.schema.json -d dirty-effects.json
+ajv validate -s schema/effect-registry.schema.json -d effect-registry.json
 ```
 
 #### Using Python jsonschema
@@ -29,11 +29,11 @@ import json
 import jsonschema
 
 # Load schema
-with open('schema/dirty-effects.schema.json') as f:
+with open('schema/effect-registry.schema.json') as f:
     schema = json.load(f)
 
 # Load data
-with open('dirty-effects.json') as f:
+with open('effect-registry.json') as f:
     data = json.load(f)
 
 # Validate
@@ -48,18 +48,18 @@ Add this to your VS Code settings to get IntelliSense and validation:
 {
   "json.schemas": [
     {
-      "fileMatch": ["dirty-effects.json", "**/dirty-effects.json"],
-      "url": "./schema/dirty-effects.schema.json"
+      "fileMatch": ["effect-registry.json", "**/effect-registry.json"],
+      "url": "./schema/effect-registry.schema.json"
     }
   ]
 }
 ```
 
-Or add this to the top of your `dirty-effects.json` file:
+Or add this to the top of your `effect-registry.json` file:
 
 ```json
 {
-  "$schema": "../schema/dirty-effects.schema.json",
+  "$schema": "../schema/effect-registry.schema.json",
   "version": "1.0",
   "effects": {
     // Your effects here
