@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"go/ast"
+	"os"
 	
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/ast/inspector"
@@ -153,9 +154,37 @@ func (ea *EffectAnalysis) CheckEffects() {
 			if callee, ok := ea.Functions[call.Callee]; ok {
 				// Check if called function's effects are declared
 				if !callee.ComputedEffects.IsSubsetOf(fn.DeclaredEffects) {
-					ea.Pass.Reportf(call.Position,
-						"function calls %s which has effects [%s] not declared in this function",
-						call.Callee, joinEffects(callee.ComputedEffects.ToSlice()))
+					missingEffects := callee.ComputedEffects.Difference(fn.DeclaredEffects)
+					
+					// Build detailed error
+					err := &EffectError{
+						CallSite:       call.Position,
+						Caller:         fn.Name,
+						Callee:         call.Callee,
+						CallerEffects:  fn.DeclaredEffects.ToSlice(),
+						CalleeEffects:  callee.ComputedEffects.ToSlice(),
+						MissingEffects: missingEffects.ToSlice(),
+					}
+					
+					// Add propagation path if callee has no declaration
+					if !callee.HasDeclaration {
+						visited := make(map[string]bool)
+						err.PropagationPath = BuildPropagationPath(call.Callee, ea.Functions, visited)
+					}
+					
+					// Check if verbose mode is enabled
+					if os.Getenv("DIRTY_VERBOSE") == "1" {
+						// Use detailed error format
+						ea.Pass.Report(analysis.Diagnostic{
+							Pos:     call.Position,
+							Message: err.Format(),
+						})
+					} else {
+						// Use simple format
+						ea.Pass.Reportf(call.Position,
+							"function calls %s which has effects [%s] not declared in this function",
+							call.Callee, joinEffects(callee.ComputedEffects.ToSlice()))
+					}
 				}
 			}
 		}

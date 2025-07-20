@@ -126,10 +126,34 @@ vet:
 
 ### エラー出力の例
 
+通常モード:
 ```bash
 $ dirty ./...
 example/simple.go:29:12: function calls GetUserByID which has effects [select[user]] not declared in this function
+```
+
+詳細モード（環境変数 `DIRTY_VERBOSE=1` を設定）:
+```bash
+$ DIRTY_VERBOSE=1 dirty ./...
 example/simple.go:43:12: function calls HelperFunction which has effects [select[user]] not declared in this function
+
+  Called function 'HelperFunction' requires:
+    - select[user]
+
+  Function 'UseHelper' declares:
+    - insert[log]
+
+  Missing effects:
+    - select[user]
+
+  Effect propagation path:
+    HelperFunction
+       effects: [select[user]]
+      └─ GetUserByID (from HelperFunction)
+         effects: [select[user]]
+
+  To fix, add the missing effects to the function declaration:
+    //dirty: insert[log], select[user]
 ```
 
 ## 制限
