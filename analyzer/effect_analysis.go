@@ -15,8 +15,8 @@ type EffectAnalysis struct {
 	Functions map[string]*FunctionInfo
 	CallGraph *CallGraph
 
-	// SQLC integration
-	SQLCEffects SQLCQueryMap
+	// JSON effect declarations
+	JSONEffects ParsedEffects
 }
 
 // NewEffectAnalysis creates a new EffectAnalysis
@@ -98,34 +98,38 @@ func (ea *EffectAnalysis) BuildCallGraph() {
 					ea.CallGraph.AddCall(funcName, calleeName, call.Pos())
 				}
 
-				// Always check SQLC effects, even if function exists
-				if ea.SQLCEffects != nil {
-					if sqlcOps, ok := ea.SQLCEffects[calleeName]; ok {
-						// If function already exists, update its effects
-						if existingFunc, exists := ea.Functions[calleeName]; exists {
-							// Only update if it doesn't have a declaration
-							if !existingFunc.HasDeclaration {
-								existingFunc.DeclaredEffects = NewStringSet(ConvertToEffects(sqlcOps)...)
-								existingFunc.ComputedEffects = NewStringSet(ConvertToEffects(sqlcOps)...)
-								existingFunc.HasDeclaration = true // Treat SQLC as declaration
-							}
-						} else {
-							// Create a synthetic function info for SQLC function
-							sqlcFunc := &FunctionInfo{
-								Name:            calleeName,
-								Package:         ea.Pass.Pkg.Path(),
-								DeclaredEffects: NewStringSet(ConvertToEffects(sqlcOps)...),
-								ComputedEffects: NewStringSet(ConvertToEffects(sqlcOps)...),
-								HasDeclaration:  true, // Treat as if it has declaration
-							}
-							ea.Functions[calleeName] = sqlcFunc
+				// Always check JSON effects, even if function exists
+				if ea.JSONEffects != nil {
+					if effectExpr, ok := ea.JSONEffects[calleeName]; ok {
+						// Evaluate the effect expression
+						effectSet, err := effectExpr.Eval(nil)
+						if err == nil {
+							// If function already exists, update its effects
+							if existingFunc, exists := ea.Functions[calleeName]; exists {
+								// Only update if it doesn't have a declaration
+								if !existingFunc.HasDeclaration {
+									existingFunc.DeclaredEffects = effectSet
+									existingFunc.ComputedEffects = effectSet
+									existingFunc.HasDeclaration = true // Treat JSON as declaration
+								}
+							} else {
+								// Create a synthetic function info for JSON function
+								jsonFunc := &FunctionInfo{
+									Name:            calleeName,
+									Package:         ea.Pass.Pkg.Path(),
+									DeclaredEffects: effectSet,
+									ComputedEffects: effectSet,
+									HasDeclaration:  true, // Treat as if it has declaration
+								}
+								ea.Functions[calleeName] = jsonFunc
 
-							// Add to call graph
-							info.CallSites = append(info.CallSites, CallSite{
-								Callee:   calleeName,
-								Position: call.Pos(),
-							})
-							ea.CallGraph.AddCall(funcName, calleeName, call.Pos())
+								// Add to call graph
+								info.CallSites = append(info.CallSites, CallSite{
+									Callee:   calleeName,
+									Position: call.Pos(),
+								})
+								ea.CallGraph.AddCall(funcName, calleeName, call.Pos())
+							}
 						}
 					}
 				}

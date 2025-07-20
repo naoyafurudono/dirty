@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "effects": {
+    "GetUserFromDB": "{ select[users] }",
+    "CreateUserInDB": "{ insert[users] | insert[audit_logs] }",
+    "UpdateUserStatusInDB": "{ update[users] | insert[audit_logs] }",
+    "DeleteUserFromDB": "{ delete[users] | insert[audit_logs] }",
+    "SendEmailNotification": "{ network[smtp] | io[filesystem] }",
+    "CallExternalAPI": "{ network[external_api] | select[cache] | insert[logs] }",
+    "ValidateUserInput": "{ }",
+    "ComputeHash": "{ }",
+    "LogActivity": "{ insert[activity_logs] }"
+  }
+}

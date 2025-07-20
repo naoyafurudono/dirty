@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "effects": {
+    "GetUser": "{ select[users] }",
+    "CreateUser": "{ insert[users] }",
+    "ComplexQuery": "{ select[users] | select[organizations] | update[member_counts] | insert[activity_logs] }",
+    "ProcessPayment": "{ select[users] | update[balance] | insert[transactions] | network[payment_api] }",
+    "ValidateInput": "{ }",
+    "ExternalAPICall": "{ network[external_api] | select[cache] | insert[logs] }"
+  }
+}
