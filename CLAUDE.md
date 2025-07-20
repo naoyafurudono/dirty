@@ -25,6 +25,9 @@ func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 - Multiple effects are comma-separated
 - Effect labels follow the pattern: `action[target]` (e.g., `select[user]`, `insert[member]`)
 
+**Internal Implementation Note:**
+While the syntax remains `action[target]`, internally the analyzer treats each effect label as a simple opaque token. The brackets and structure are preserved for readability and future extensibility, but the current implementation does not parse or interpret the action/target components separately.
+
 ## Development Setup
 
 Since this project is in design phase, initial setup will involve:
