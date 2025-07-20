@@ -9,7 +9,7 @@ import (
 
 func TestAnalyzer(t *testing.T) {
 	testdata := analysistest.TestData()
-	analysistest.Run(t, testdata, analyzer.Analyzer, "basic", "complex")
+	analysistest.Run(t, testdata, analyzer.Analyzer, "basic", "complex", "implicit")
 }
 
 func TestParseEffects(t *testing.T) {

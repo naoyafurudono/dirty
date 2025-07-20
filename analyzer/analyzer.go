@@ -1,7 +1,6 @@
 package analyzer
 
 import (
-	"go/ast"
 	"strings"
 
 	"golang.org/x/tools/go/analysis"
@@ -19,85 +18,22 @@ var Analyzer = &analysis.Analyzer{
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-
-	// Map from function name to its effects
-	functionEffects := make(map[string][]string)
-
-	// First pass: collect all function effects
-	nodeFilter := []ast.Node{
-		(*ast.FuncDecl)(nil),
-	}
-
-	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		fn := n.(*ast.FuncDecl)
-		if fn.Name == nil {
-			return
-		}
-		
-		if fn.Doc != nil {
-			for _, comment := range fn.Doc.List {
-				if effects := ParseEffects(comment.Text); effects != nil {
-					functionEffects[fn.Name.Name] = effects
-					break
-				}
-			}
-		}
-	})
-
-	// Second pass: check calls within functions
-	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		fn := n.(*ast.FuncDecl)
-		if fn.Name == nil {
-			return
-		}
-		
-		// Get declared effects for this function
-		declaredEffects := functionEffects[fn.Name.Name]
-		
-		// Check all function calls within this function
-		ast.Inspect(fn, func(n ast.Node) bool {
-			call, ok := n.(*ast.CallExpr)
-			if !ok {
-				return true
-			}
-			
-			// Get called function name
-			var calledName string
-			switch fun := call.Fun.(type) {
-			case *ast.Ident:
-				calledName = fun.Name
-			case *ast.SelectorExpr:
-				calledName = fun.Sel.Name
-			}
-			
-			if calledName == "" {
-				return true
-			}
-			
-			// Get effects of called function
-			calledEffects, ok := functionEffects[calledName]
-			if !ok || len(calledEffects) == 0 {
-				// No effects declared for called function
-				return true
-			}
-			
-			// Check if declared effects is nil (function has no //dirty: comment)
-			if declaredEffects == nil {
-				// Function doesn't declare effects, so we don't check it
-				return true
-			}
-			
-			// Find missing effects
-			missingEffects := findMissingEffects(calledEffects, declaredEffects)
-			if len(missingEffects) > 0 {
-				pass.Reportf(call.Pos(), "function calls %s which has effects [%s] not declared in this function",
-					calledName, strings.Join(calledEffects, ", "))
-			}
-			
-			return true
-		})
-	})
-
+	
+	// Create effect analysis
+	analysis := NewEffectAnalysis(pass, inspect)
+	
+	// Phase 1: Collect all functions and their declared effects
+	analysis.CollectFunctions()
+	
+	// Phase 2: Build call graph
+	analysis.BuildCallGraph()
+	
+	// Phase 3: Propagate effects
+	analysis.PropagateEffects()
+	
+	// Phase 4: Check effect consistency
+	analysis.CheckEffects()
+	
 	return nil, nil
 }
 

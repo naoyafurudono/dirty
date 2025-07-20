@@ -45,5 +45,5 @@ func ImplicitEffects(userID int64) error {
 // Invalid: function with empty effect declaration calling function with effects
 //dirty:
 func EmptyEffects(userID int64) error {
-	return GetUserWithMembers(userID) // want "function calls GetUserWithMembers which has effects \\[select\\[user\\], select\\[member\\]\\] not declared in this function"
+	return GetUserWithMembers(userID) // want "function calls GetUserWithMembers which has effects \\[select\\[member\\], select\\[user\\]\\] not declared in this function"
 }

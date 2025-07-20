@@ -24,9 +24,13 @@ func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 
 ## Implementation Status
 
-**Current:** Basic effect checking at call sites
-**Next:** Implicit effect calculation for undeclared functions
-**Future:** Cross-package analysis, method calls
+**Completed:** ✅
+- Basic effect checking at call sites
+- Implicit effect calculation for undeclared functions
+- Method call support
+- Circular dependency handling
+
+**Next:** Error reporting improvements, performance optimization
 
 ## Project Structure
 

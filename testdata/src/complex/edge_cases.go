@@ -12,7 +12,7 @@ func ManageUser(id int64, action string) error {
 // Empty effect declaration (should be valid but warns about missing effects from calls)
 //dirty:
 func EmptyEffectDeclaration() error {
-	return ManageUser(1, "delete") // want "function calls ManageUser which has effects \\[select\\[user\\], update\\[user\\], delete\\[user\\]\\] not declared in this function"
+	return ManageUser(1, "delete") // want "function calls ManageUser which has effects \\[delete\\[user\\], select\\[user\\], update\\[user\\]\\] not declared in this function"
 }
 
 // No effect comment at all - not checked
