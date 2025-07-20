@@ -18,17 +18,17 @@ func LoadEffectDeclarations(path string) (*EffectDeclarations, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var decls EffectDeclarations
 	if err := json.Unmarshal(data, &decls); err != nil {
 		return nil, err
 	}
-	
+
 	// Validate version
 	if decls.Version != "1.0" {
 		return nil, fmt.Errorf("unsupported version: %s", decls.Version)
 	}
-	
+
 	return &decls, nil
 }
 

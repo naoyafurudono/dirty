@@ -40,12 +40,12 @@ func ParseEffectDecl(comment string) (EffectExpr, error) {
 		content = strings.TrimPrefix(comment, "// dirty:")
 	}
 	content = strings.TrimSpace(content)
-	
+
 	if content == "" {
 		// Empty declaration means empty set
 		return &LiteralSet{Elements: []EffectExpr{}}, nil
 	}
-	
+
 	parser := NewParser(content)
 	return parser.parseSetExpr()
 }
@@ -56,13 +56,13 @@ func (p *Parser) parseSetExpr() (EffectExpr, error) {
 		return nil, fmt.Errorf("expected '{' at position %d, got %s", p.cur.Pos, p.cur.String())
 	}
 	p.nextToken() // skip {
-	
+
 	// Handle empty set
 	if p.cur.Type == TOKEN_RBRACE {
 		p.nextToken() // skip }
 		return &LiteralSet{Elements: []EffectExpr{}}, nil
 	}
-	
+
 	// Parse elements
 	elements := []EffectExpr{}
 	for {
@@ -71,21 +71,21 @@ func (p *Parser) parseSetExpr() (EffectExpr, error) {
 			return nil, err
 		}
 		elements = append(elements, elem)
-		
+
 		// Check for | or }
 		if p.cur.Type == TOKEN_PIPE {
 			p.nextToken() // skip |
 			continue
 		}
-		
+
 		if p.cur.Type == TOKEN_RBRACE {
 			p.nextToken() // skip }
 			break
 		}
-		
+
 		return nil, fmt.Errorf("expected '|' or '}' at position %d, got %s", p.cur.Pos, p.cur.String())
 	}
-	
+
 	return &LiteralSet{Elements: elements}, nil
 }
 
@@ -96,31 +96,31 @@ func (p *Parser) parsePrimary() (EffectExpr, error) {
 		// Could be an effect label or effect reference
 		ident := p.cur.Value
 		p.nextToken()
-		
+
 		if p.cur.Type == TOKEN_LBRACKET {
 			// Effect label: operation[target]
 			p.nextToken() // skip [
-			
+
 			if p.cur.Type != TOKEN_IDENT {
 				return nil, fmt.Errorf("expected identifier after '[' at position %d, got %s", p.cur.Pos, p.cur.String())
 			}
 			target := p.cur.Value
 			p.nextToken()
-			
+
 			if p.cur.Type != TOKEN_RBRACKET {
 				return nil, fmt.Errorf("expected ']' at position %d, got %s", p.cur.Pos, p.cur.String())
 			}
 			p.nextToken() // skip ]
-			
+
 			return &EffectLabel{
 				Operation: ident,
 				Target:    target,
 			}, nil
 		}
-		
+
 		// Effect reference (Phase 2, but parse it anyway)
 		return &EffectRef{Name: ident}, nil
-		
+
 	case TOKEN_LPAREN:
 		// Parenthesized expression
 		p.nextToken() // skip (
@@ -133,7 +133,7 @@ func (p *Parser) parsePrimary() (EffectExpr, error) {
 		}
 		p.nextToken() // skip )
 		return expr, nil
-		
+
 	default:
 		return nil, fmt.Errorf("unexpected token at position %d: %s", p.cur.Pos, p.cur.String())
 	}
@@ -142,25 +142,25 @@ func (p *Parser) parsePrimary() (EffectExpr, error) {
 // parseUnionExpr parses a union expression (for future use with parentheses)
 func (p *Parser) parseUnionExpr() (EffectExpr, error) {
 	elements := []EffectExpr{}
-	
+
 	for {
 		elem, err := p.parsePrimary()
 		if err != nil {
 			return nil, err
 		}
 		elements = append(elements, elem)
-		
+
 		if p.cur.Type != TOKEN_PIPE {
 			break
 		}
 		p.nextToken() // skip |
 	}
-	
+
 	// If only one element, return it directly
 	if len(elements) == 1 {
 		return elements[0], nil
 	}
-	
+
 	// Otherwise, wrap in a literal set
 	return &LiteralSet{Elements: elements}, nil
 }

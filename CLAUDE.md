@@ -59,4 +59,3 @@ Keep code base to pass all tests.
 ## Release
 
 Increment git tag version when new feature added.
-

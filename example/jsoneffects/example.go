@@ -53,7 +53,7 @@ func ProcessWithExternalCall() error {
 
 	// Log the activity
 	LogActivity(fmt.Sprintf("external_call_result: %s", data))
-	
+
 	return nil
 }
 
@@ -69,7 +69,7 @@ func UseHelper(userID string) error {
 	if err := HelperFunction(userID); err != nil {
 		return err
 	}
-	
+
 	LogActivity("user_deleted")
 	return nil
 }
@@ -84,4 +84,3 @@ func CallExternalAPI() (string, error) { return "", nil }
 func ValidateUserInput(email string) error { return nil }
 func ComputeHash(data string) string { return "" }
 func LogActivity(activity string) {}
-

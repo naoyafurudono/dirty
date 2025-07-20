@@ -43,17 +43,17 @@ func LoadEffectDeclarations(path string) (*EffectDeclarations, error) {
     if err != nil {
         return nil, err
     }
-    
+
     var decls EffectDeclarations
     if err := json.Unmarshal(data, &decls); err != nil {
         return nil, err
     }
-    
+
     // Validate version
     if decls.Version != "1.0" {
         return nil, fmt.Errorf("unsupported version: %s", decls.Version)
     }
-    
+
     return &decls, nil
 }
 
@@ -79,7 +79,7 @@ func (d *EffectDeclarations) ParseAll() (ParsedEffects, error) {
 ```go
 type EffectAnalysis struct {
     // ... existing fields ...
-    
+
     // JSON-based effect declarations
     JSONEffects ParsedEffects
 }
@@ -95,7 +95,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
             jsonPath = filepath.Join(pkgDir, "dirty-effects.json")
         }
     }
-    
+
     var jsonEffects ParsedEffects
     if jsonPath != "" && fileExists(jsonPath) {
         decls, err := LoadEffectDeclarations(jsonPath)
@@ -103,7 +103,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
             jsonEffects, _ = decls.ParseAll()
         }
     }
-    
+
     // ... rest of analysis ...
 }
 ```
@@ -163,7 +163,7 @@ DIRTY_EFFECTS_JSON=./my-effects.json dirty ./...
 func ValidateUser(id int64) error { ... }
 
 // JSONで宣言された関数
-func ProcessPayment(amount float64) error { 
+func ProcessPayment(amount float64) error {
     // JSONから: { select[users] | update[balance] | insert[transactions] | network[payment_api] }
 }
 ```

@@ -137,7 +137,7 @@ type EffectResolver interface {
             Target: "users",
         },
         &EffectLabel{
-            Operation: "insert", 
+            Operation: "insert",
             Target: "logs",
         },
         &EffectLabel{
@@ -212,7 +212,7 @@ type Lexer struct {
     pos   int
 }
 
-// パーサー  
+// パーサー
 type Parser struct {
     lexer *Lexer
     cur   Token
@@ -223,12 +223,12 @@ func ParseEffectDecl(comment string) (EffectExpr, error) {
     // "//dirty:" プレフィックスを削除
     content := strings.TrimPrefix(strings.TrimSpace(comment), "//dirty:")
     content = strings.TrimSpace(content)
-    
+
     parser := &Parser{
         lexer: &Lexer{input: content},
     }
     parser.next() // 最初のトークンを読む
-    
+
     return parser.parseSetExpr()
 }
 
@@ -238,13 +238,13 @@ func (p *Parser) parseSetExpr() (EffectExpr, error) {
         return nil, fmt.Errorf("expected '{', got %s", p.cur.Value)
     }
     p.next() // skip {
-    
+
     // 空集合の場合
     if p.cur.Type == TOKEN_RBRACE {
         p.next() // skip }
         return &LiteralSet{Elements: []EffectExpr{}}, nil
     }
-    
+
     // 要素をパース
     elements := []EffectExpr{}
     for {
@@ -253,22 +253,22 @@ func (p *Parser) parseSetExpr() (EffectExpr, error) {
             return nil, err
         }
         elements = append(elements, elem)
-        
+
         // 次が | なら続ける
         if p.cur.Type == TOKEN_PIPE {
             p.next() // skip |
             continue
         }
-        
+
         // } なら終了
         if p.cur.Type == TOKEN_RBRACE {
             p.next() // skip }
             break
         }
-        
+
         return nil, fmt.Errorf("expected '|' or '}', got %s", p.cur.Value)
     }
-    
+
     return &LiteralSet{Elements: elements}, nil
 }
 ```
@@ -320,25 +320,25 @@ tests := []struct {
     wantErr  bool
 }{
     // 基本的なケース
-    {"//dirty: { select[users] }", 
+    {"//dirty: { select[users] }",
      []string{"select[users]"}, false},
-    
+
     // 和集合
-    {"//dirty: { select[users] | insert[logs] }", 
+    {"//dirty: { select[users] | insert[logs] }",
      []string{"select[users]", "insert[logs]"}, false},
-    
+
     // 3つ以上の和集合
     {"//dirty: { select[users] | insert[logs] | update[users] }",
      []string{"select[users]", "insert[logs]", "update[users]"}, false},
-    
+
     // 空集合
     {"//dirty: { }",
      []string{}, false},
-    
+
     // 括弧を使った優先順位（将来の拡張のため）
     {"//dirty: { (select[users] | select[posts]) | insert[logs] }",
      []string{"select[users]", "select[posts]", "insert[logs]"}, false},
-    
+
     // エラーケース
     {"//dirty: select[users]",  // {} がない
      nil, true},
@@ -357,7 +357,7 @@ tests := []struct {
 // 変更前
 //dirty: select[user], insert[log]
 
-// 変更後  
+// 変更後
 //dirty: { select[user] | insert[log] }
 ```
 

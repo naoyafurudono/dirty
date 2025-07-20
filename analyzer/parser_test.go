@@ -104,7 +104,7 @@ func TestParseEffectDecl(t *testing.T) {
 			wantErr: true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := ParseEffectDecl(tt.input)
@@ -151,7 +151,7 @@ func TestEval(t *testing.T) {
 			want: []string{"select[users]", "insert[logs]", "update[users]"},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.expr.Eval(nil)
@@ -159,7 +159,7 @@ func TestEval(t *testing.T) {
 				t.Errorf("Eval() error = %v", err)
 				return
 			}
-			
+
 			// Convert StringSet to sorted slice for comparison
 			gotSlice := got.ToSlice()
 			if !equalStringSlices(gotSlice, tt.want) {
