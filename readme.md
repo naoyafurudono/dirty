@@ -268,25 +268,6 @@ func GetUser(id int64) (User, error) {
 }
 ```
 
-### sqlc-useとの統合例
-
-[sqlc-use](https://github.com/naoyafurudono/sqlc-use)の出力を変換してdirtyで使用できます：
-
-```bash
-# sqlc-useの出力を変換するスクリプト例
-sqlc-use analyze | jq '{
-  version: "1.0",
-  effects: (
-    to_entries | map({
-      key: .key,
-      value: ("{ " + (
-        .value | map("\(.operation)[\(.table)]") | join(" | ")
-      ) + " }")
-    }) | from_entries
-  )
-}' > dirty-effects.json
-```
-
 ### CI/CDでの使用例
 
 ```yaml

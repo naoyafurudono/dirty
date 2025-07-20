@@ -36,7 +36,7 @@ func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 - Method call support
 - Circular dependency handling
 - Error reporting with detailed diagnostics (DIRTY_VERBOSE=1)
-- JSON-based effect declarations for external functions (replaced sqlc-use)
+- JSON-based effect declarations for external functions
 - Extensible effect syntax with set notation (Issue #2)
 
 **Next:** Performance optimization, cross-package analysis
