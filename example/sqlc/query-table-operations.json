@@ -7,7 +7,7 @@
   ],
   "GetUserByEmail": [
     {
-      "operation": "select", 
+      "operation": "select",
       "table": "users"
     }
   ],

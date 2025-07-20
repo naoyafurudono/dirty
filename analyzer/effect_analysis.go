@@ -3,7 +3,7 @@ package analyzer
 import (
 	"go/ast"
 	"os"
-	
+
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/ast/inspector"
 )
@@ -14,7 +14,7 @@ type EffectAnalysis struct {
 	Inspector *inspector.Inspector
 	Functions map[string]*FunctionInfo
 	CallGraph *CallGraph
-	
+
 	// SQLC integration
 	SQLCEffects SQLCQueryMap
 }
@@ -34,13 +34,13 @@ func (ea *EffectAnalysis) CollectFunctions() {
 	nodeFilter := []ast.Node{
 		(*ast.FuncDecl)(nil),
 	}
-	
+
 	ea.Inspector.Preorder(nodeFilter, func(n ast.Node) {
 		fn := n.(*ast.FuncDecl)
 		if fn.Name == nil {
 			return
 		}
-		
+
 		funcName := fn.Name.Name
 		info := &FunctionInfo{
 			Name:            funcName,
@@ -51,7 +51,7 @@ func (ea *EffectAnalysis) CollectFunctions() {
 			Decl:            fn,
 			CallSites:       []CallSite{},
 		}
-		
+
 		// Extract effects from //dirty: comment
 		if fn.Doc != nil {
 			for _, comment := range fn.Doc.List {
@@ -63,7 +63,7 @@ func (ea *EffectAnalysis) CollectFunctions() {
 				}
 			}
 		}
-		
+
 		ea.Functions[funcName] = info
 	})
 }
@@ -77,7 +77,7 @@ func (ea *EffectAnalysis) BuildCallGraph() {
 			if !ok {
 				return true
 			}
-			
+
 			// Extract called function name
 			var calleeName string
 			switch fun := call.Fun.(type) {
@@ -87,7 +87,7 @@ func (ea *EffectAnalysis) BuildCallGraph() {
 				// Handle method calls
 				calleeName = fun.Sel.Name
 			}
-			
+
 			if calleeName != "" {
 				// Check if the called function is in our analysis
 				if _, exists := ea.Functions[calleeName]; exists {
@@ -97,7 +97,7 @@ func (ea *EffectAnalysis) BuildCallGraph() {
 					})
 					ea.CallGraph.AddCall(funcName, calleeName, call.Pos())
 				}
-				
+
 				// Always check SQLC effects, even if function exists
 				if ea.SQLCEffects != nil {
 					if sqlcOps, ok := ea.SQLCEffects[calleeName]; ok {
@@ -119,7 +119,7 @@ func (ea *EffectAnalysis) BuildCallGraph() {
 								HasDeclaration:  true, // Treat as if it has declaration
 							}
 							ea.Functions[calleeName] = sqlcFunc
-							
+
 							// Add to call graph
 							info.CallSites = append(info.CallSites, CallSite{
 								Callee:   calleeName,
@@ -130,7 +130,7 @@ func (ea *EffectAnalysis) BuildCallGraph() {
 					}
 				}
 			}
-			
+
 			return true
 		})
 	}
@@ -141,29 +141,29 @@ func (ea *EffectAnalysis) PropagateEffects() {
 	// Initialize worklist with all functions
 	worklist := make([]string, 0, len(ea.Functions))
 	inWorklist := make(map[string]bool)
-	
+
 	for name := range ea.Functions {
 		worklist = append(worklist, name)
 		inWorklist[name] = true
 	}
-	
+
 	// Process until worklist is empty
 	for len(worklist) > 0 {
 		// Pop from worklist
 		funcName := worklist[len(worklist)-1]
 		worklist = worklist[:len(worklist)-1]
 		inWorklist[funcName] = false
-		
+
 		fn := ea.Functions[funcName]
 		oldEffects := fn.ComputedEffects.Clone()
-		
+
 		// Collect effects from all called functions
 		for _, call := range fn.CallSites {
 			if callee, ok := ea.Functions[call.Callee]; ok {
 				fn.ComputedEffects.AddAll(callee.ComputedEffects)
 			}
 		}
-		
+
 		// If effects changed, add callers to worklist
 		if !oldEffects.Equals(fn.ComputedEffects) {
 			for _, caller := range ea.CallGraph.CalledBy[funcName] {
@@ -183,14 +183,14 @@ func (ea *EffectAnalysis) CheckEffects() {
 		if !fn.HasDeclaration {
 			continue
 		}
-		
+
 		// Check each call site
 		for _, call := range fn.CallSites {
 			if callee, ok := ea.Functions[call.Callee]; ok {
 				// Check if called function's effects are declared
 				if !callee.ComputedEffects.IsSubsetOf(fn.DeclaredEffects) {
 					missingEffects := callee.ComputedEffects.Difference(fn.DeclaredEffects)
-					
+
 					// Build detailed error
 					err := &EffectError{
 						CallSite:       call.Position,
@@ -200,13 +200,13 @@ func (ea *EffectAnalysis) CheckEffects() {
 						CalleeEffects:  callee.ComputedEffects.ToSlice(),
 						MissingEffects: missingEffects.ToSlice(),
 					}
-					
+
 					// Add propagation path if callee has no declaration
 					if !callee.HasDeclaration {
 						visited := make(map[string]bool)
 						err.PropagationPath = BuildPropagationPath(call.Callee, ea.Functions, visited)
 					}
-					
+
 					// Check if verbose mode is enabled
 					if os.Getenv("DIRTY_VERBOSE") == "1" {
 						// Use detailed error format

@@ -20,10 +20,10 @@ var Analyzer = &analysis.Analyzer{
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-	
+
 	// Create effect analysis
 	analysis := NewEffectAnalysis(pass, inspect)
-	
+
 	// Load SQLC effects if available
 	sqlcJSON := os.Getenv("DIRTY_SQLC_JSON")
 	if sqlcJSON == "" {
@@ -40,26 +40,26 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			}
 		}
 	}
-	
+
 	if sqlcJSON != "" {
 		if sqlcEffects, err := LoadSQLCEffects(sqlcJSON); err == nil {
 			analysis.SQLCEffects = sqlcEffects
 		}
 		// Silently ignore errors loading SQLC JSON
 	}
-	
+
 	// Phase 1: Collect all functions and their declared effects
 	analysis.CollectFunctions()
-	
+
 	// Phase 2: Build call graph
 	analysis.BuildCallGraph()
-	
+
 	// Phase 3: Propagate effects
 	analysis.PropagateEffects()
-	
+
 	// Phase 4: Check effect consistency
 	analysis.CheckEffects()
-	
+
 	return nil, nil
 }
 
@@ -70,25 +70,25 @@ func ParseEffects(comment string) []string {
 	if !strings.HasPrefix(comment, "//dirty:") {
 		return nil
 	}
-	
+
 	effectStr := strings.TrimPrefix(comment, "//dirty:")
 	effectStr = strings.TrimSpace(effectStr)
-	
+
 	if effectStr == "" {
 		return []string{}
 	}
-	
+
 	// Split by comma and trim spaces
 	parts := strings.Split(effectStr, ",")
 	effects := make([]string, 0, len(parts))
-	
+
 	for _, part := range parts {
 		part = strings.TrimSpace(part)
 		if part != "" {
 			effects = append(effects, part)
 		}
 	}
-	
+
 	return effects
 }
 
@@ -98,13 +98,13 @@ func findMissingEffects(called, declared []string) []string {
 	for _, effect := range declared {
 		declaredSet[effect] = true
 	}
-	
+
 	var missing []string
 	for _, effect := range called {
 		if !declaredSet[effect] {
 			missing = append(missing, effect)
 		}
 	}
-	
+
 	return missing
 }

@@ -25,7 +25,7 @@ func ExtractDirtyComment(fn *ast.FuncDecl) string {
 	if fn.Doc == nil {
 		return ""
 	}
-	
+
 	for _, comment := range fn.Doc.List {
 		text := strings.TrimSpace(comment.Text)
 		if strings.HasPrefix(text, "//dirty:") {
@@ -38,12 +38,12 @@ func ExtractDirtyComment(fn *ast.FuncDecl) string {
 // AssertEffects checks if two effect slices are equal
 func AssertEffects(t *testing.T, got, want []string) {
 	t.Helper()
-	
+
 	if len(got) != len(want) {
 		t.Errorf("effect count mismatch: got %d, want %d", len(got), len(want))
 		return
 	}
-	
+
 	for i := range got {
 		if got[i] != want[i] {
 			t.Errorf("effect[%d] mismatch: got %q, want %q", i, got[i], want[i])
@@ -58,24 +58,24 @@ func ParseEffectsFromComment(comment string) ([]string, error) {
 	if !strings.HasPrefix(comment, "//dirty:") {
 		return nil, fmt.Errorf("not a dirty comment: %s", comment)
 	}
-	
+
 	comment = strings.TrimPrefix(comment, "//dirty:")
 	comment = strings.TrimSpace(comment)
-	
+
 	if comment == "" {
 		return []string{}, nil
 	}
-	
+
 	// Split by comma and trim spaces
 	parts := strings.Split(comment, ",")
 	effects := make([]string, 0, len(parts))
-	
+
 	for _, part := range parts {
 		part = strings.TrimSpace(part)
 		if part != "" {
 			effects = append(effects, part)
 		}
 	}
-	
+
 	return effects, nil
 }

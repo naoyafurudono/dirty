@@ -65,7 +65,7 @@ dirtyは[sqlc-use](https://github.com/naoyafurudono/sqlc-use)と統合され、S
 2. **エフェクト変換**: `operation[table]` 形式に変換
    - `select[users]`, `insert[logs]`, `update[posts]`, `delete[sessions]`
 
-3. **自動検出**: 
+3. **自動検出**:
    - 環境変数 `DIRTY_SQLC_JSON` で指定
    - パッケージディレクトリの `query-table-operations.json` を自動検出
 

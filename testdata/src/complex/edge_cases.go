@@ -41,7 +41,7 @@ func TraverseTree(nodeID int64) error {
 	if nodeID == 0 {
 		return nil
 	}
-	
+
 	// Recursive case - effect is already declared
 	return TraverseTree(nodeID - 1)
 }

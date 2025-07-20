@@ -35,12 +35,12 @@ func (s *UserService) UpdateUserWithAudit(id int64, name string) error {
 	if err := s.repo.FindByID(id); err != nil {
 		return err
 	}
-	
+
 	// Update user
 	if err := s.repo.UpdateName(id, name); err != nil {
 		return err
 	}
-	
+
 	// Log the change (INSERT INTO audit_log)
 	return nil
 }
@@ -51,10 +51,10 @@ func (s *UserService) UpdateUserBroken(id int64, name string) error {
 	if err := s.repo.FindByID(id); err != nil { // want "function calls FindByID which has effects \\[select\\[user\\]\\] not declared in this function"
 		return err
 	}
-	
+
 	if err := s.repo.UpdateName(id, name); err != nil {
 		return err
 	}
-	
+
 	return nil
 }

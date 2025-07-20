@@ -30,12 +30,12 @@ func InitializeUserSession(userID int64) error {
 	if err := LoadConfig(); err != nil {
 		return err
 	}
-	
+
 	// Get user with audit logging
 	if err := GetUserWithAudit(userID); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -45,10 +45,10 @@ func InitializeUserSessionBroken(userID int64) error {
 	if err := LoadConfig(); err != nil { // want "function calls LoadConfig which has effects \\[select\\[config\\]\\] not declared in this function"
 		return err
 	}
-	
+
 	if err := GetUserWithAudit(userID); err != nil {
 		return err
 	}
-	
+
 	return nil
 }

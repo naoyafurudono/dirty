@@ -33,7 +33,7 @@ package main
 import (
     "github.com/naoyafurudono/dirty/analyzer"
     "golang.org/x/tools/go/analysis/unitchecker"
-    
+
     // 標準のvetチェッカー
     "golang.org/x/tools/go/analysis/passes/atomic"
     "golang.org/x/tools/go/analysis/passes/bools"
@@ -47,7 +47,7 @@ func main() {
         atomic.Analyzer,
         bools.Analyzer,
         copylocks.Analyzer,
-        
+
         // dirtyアナライザーを追加
         analyzer.Analyzer,
     )
@@ -112,7 +112,7 @@ vet:
 	go vet -vettool=$$(go env GOPATH)/bin/dirty ./...
 
 # または
-lint: 
+lint:
 	go vet ./...
 	dirty ./...
 ```
@@ -127,7 +127,7 @@ lint:
 - name: Run go vet
   run: go vet ./...
 
-- name: Run dirty analyzer  
+- name: Run dirty analyzer
   run: go vet -vettool=$(go env GOPATH)/bin/dirty ./...
 ```
 

@@ -45,7 +45,7 @@ func (g *CallGraph) AddCall(caller, callee string, pos token.Pos) {
 		Callee:   callee,
 		Position: pos,
 	})
-	
+
 	// Update reverse mapping
 	found := false
 	for _, c := range g.CalledBy[callee] {

@@ -28,7 +28,7 @@ func GetUserAndLog(id int64) error {
 func ValidCaller(userID int64) error {
 	// This has its own effect
 	// SELECT * FROM sessions WHERE user_id = ?
-	
+
 	// Call function with implicit effects
 	return GetUserAndLog(userID)
 }
@@ -37,7 +37,7 @@ func ValidCaller(userID int64) error {
 //dirty: select[session]
 func InvalidCaller(userID int64) error {
 	// SELECT * FROM sessions WHERE user_id = ?
-	
+
 	// This call brings in select[user] and insert[log] implicitly
 	return GetUserAndLog(userID) // want "function calls GetUserAndLog which has effects \\[insert\\[log\\], select\\[user\\]\\] not declared in this function"
 }

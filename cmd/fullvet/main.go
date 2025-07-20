@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/naoyafurudono/dirty/analyzer"
 	"golang.org/x/tools/go/analysis/unitchecker"
-	
+
 	// 標準的なvetチェッカーをインポート
 	"golang.org/x/tools/go/analysis/passes/asmdecl"
 	"golang.org/x/tools/go/analysis/passes/assign"
@@ -57,7 +57,7 @@ func main() {
 		unreachable.Analyzer,
 		unsafeptr.Analyzer,
 		unusedresult.Analyzer,
-		
+
 		// dirtyアナライザーを追加
 		analyzer.Analyzer,
 	)

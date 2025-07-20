@@ -14,7 +14,7 @@ func GetUserWithMembers(userID int64) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// SELECT * FROM members WHERE user_id = ?
 	return nil
 }
@@ -26,7 +26,7 @@ func GetMemberOnly(userID int64) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// SELECT * FROM members WHERE user_id = ?
 	return nil
 }
