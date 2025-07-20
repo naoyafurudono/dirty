@@ -195,6 +195,8 @@ dirtyはJSONファイルから関数のエフェクトを宣言できます。�
 - `effects`: 関数名をキー、エフェクト式を値とするマッピング
 - エフェクト式はソースコード内の宣言と同じ文法を使用
 
+**JSON Schema**: `schema/dirty-effects.schema.json`でスキーマが定義されています。VS CodeなどのエディタでIntelliSenseとバリデーションが利用できます。
+
 ### JSONファイルの配置
 
 dirtyは以下の順序でJSONファイルを検索します：

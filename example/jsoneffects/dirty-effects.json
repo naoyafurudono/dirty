@@ -1,4 +1,5 @@
 {
+  "$schema": "../../schema/dirty-effects.schema.json",
   "version": "1.0",
   "effects": {
     "GetUserFromDB": "{ select[users] }",
