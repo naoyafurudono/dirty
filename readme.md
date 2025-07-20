@@ -124,6 +124,13 @@ vet:
   run: dirty ./...
 ```
 
+### 実例
+
+詳細な例は[example/](example/)ディレクトリを参照してください：
+- [example/simple.go](example/simple.go) - 基本的な使い方
+- [example/complex_chain.go](example/complex_chain.go) - 複雑な呼び出しチェーン
+- [example/sqlc/](example/sqlc/) - sqlc-use統合の例
+
 ### エラー出力の例
 
 通常モード:
