@@ -1,6 +1,8 @@
 package analyzer
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 
 	"golang.org/x/tools/go/analysis"
@@ -21,6 +23,30 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	
 	// Create effect analysis
 	analysis := NewEffectAnalysis(pass, inspect)
+	
+	// Load SQLC effects if available
+	sqlcJSON := os.Getenv("DIRTY_SQLC_JSON")
+	if sqlcJSON == "" {
+		// Try to find query-table-operations.json in current directory
+		if _, err := os.Stat("query-table-operations.json"); err == nil {
+			sqlcJSON = "query-table-operations.json"
+		}
+		// Also check package directory
+		if sqlcJSON == "" && len(pass.Files) > 0 {
+			pkgDir := filepath.Dir(pass.Fset.Position(pass.Files[0].Pos()).Filename)
+			jsonPath := filepath.Join(pkgDir, "query-table-operations.json")
+			if _, err := os.Stat(jsonPath); err == nil {
+				sqlcJSON = jsonPath
+			}
+		}
+	}
+	
+	if sqlcJSON != "" {
+		if sqlcEffects, err := LoadSQLCEffects(sqlcJSON); err == nil {
+			analysis.SQLCEffects = sqlcEffects
+		}
+		// Silently ignore errors loading SQLC JSON
+	}
 	
 	// Phase 1: Collect all functions and their declared effects
 	analysis.CollectFunctions()

@@ -156,6 +156,54 @@ example/simple.go:43:12: function calls HelperFunction which has effects [select
     //dirty: insert[log], select[user]
 ```
 
+## sqlc-use との統合
+
+dirtyは[sqlc-use](https://github.com/naoyafurudono/sqlc-use)の出力を読み込んで、SQLCで生成された関数のエフェクトを自動的に検出できます。
+
+### 使い方
+
+1. sqlc-useでクエリのテーブル操作を解析:
+```bash
+sqlc-use analyze > query-table-operations.json
+```
+
+2. dirtyでSQLCエフェクトを使用:
+```bash
+# 環境変数で指定
+DIRTY_SQLC_JSON=query-table-operations.json dirty ./...
+
+# またはパッケージディレクトリに配置（自動検出）
+cp query-table-operations.json ./pkg/db/
+dirty ./pkg/db/...
+```
+
+### 例
+
+sqlc-useが生成するJSON:
+```json
+{
+  "GetUser": [
+    {"operation": "select", "table": "users"}
+  ],
+  "CreateUserWithAudit": [
+    {"operation": "insert", "table": "users"},
+    {"operation": "insert", "table": "audit_logs"}
+  ]
+}
+```
+
+dirtyでの検証:
+```go
+//dirty: select[users], insert[logs]
+func ProcessUser(ctx context.Context, q *Queries, id int64) error {
+    user, err := q.GetUser(ctx, id) // 自動的に select[users] を検出
+    if err != nil {
+        return err
+    }
+    return logAccess(user.ID) // insert[logs]
+}
+```
+
 ## 制限
 
 実装をするのが面倒なので、今は色々な実装上のサボりをします。結果的に予期せぬ振る舞いがたくさん生じます。

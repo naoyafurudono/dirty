@@ -12,6 +12,14 @@ func TestAnalyzer(t *testing.T) {
 	analysistest.Run(t, testdata, analyzer.Analyzer, "basic", "complex", "implicit")
 }
 
+func TestAnalyzerWithSQLC(t *testing.T) {
+	// Set SQLC JSON for this test - use absolute path
+	testdata := analysistest.TestData()
+	sqlcJSONPath := testdata + "/src/sqlc/query-table-operations.json"
+	t.Setenv("DIRTY_SQLC_JSON", sqlcJSONPath)
+	analysistest.Run(t, testdata, analyzer.Analyzer, "sqlc")
+}
+
 func TestParseEffects(t *testing.T) {
 	tests := []struct {
 		name    string

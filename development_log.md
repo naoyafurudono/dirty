@@ -75,3 +75,34 @@
 - パフォーマンスの最適化
 - クロスパッケージ解析
 - IDE統合（LSP実装）
+
+## 2025-07-20（続き）
+
+### sqlc-use統合の実装完了 ✅
+
+1. **実装内容**
+   - SQLCOperation構造体とJSON解析機能（`analyzer/sqlc_analyzer.go`）
+   - 包括的なテストスイート（`analyzer/sqlc_analyzer_test.go`）
+   - EffectAnalysisへのSQLC統合
+   - 環境変数（`DIRTY_SQLC_JSON`）と自動検出のサポート
+
+2. **技術的詳細**
+   - アナライザー初期化時にSQLCエフェクトを読み込み
+   - 関数呼び出し時にSQLCクエリ名と一致する場合、自動的にエフェクトを適用
+   - SQLC関数は明示的な`//dirty:`宣言があるものとして扱う
+   - sqlc-use形式（`{"operation": "select", "table": "users"}`）からdirty形式（`select[users]`）への変換
+
+3. **テストカバレッジ**
+   - JSON読み込みとエフェクト変換の単体テスト
+   - analysistesstフレームワークでの統合テスト
+   - モックSQLCコードでのエンドツーエンドテスト
+
+4. **ドキュメント更新**
+   - README.md: sqlc-use統合の使い方を追加
+   - DESIGN.md: 統合の実装方法を記載
+   - CLAUDE.md: 完了状態を更新
+
+### 今後の改善案
+- CLIフラグのサポート（現在は環境変数のみ）
+- パフォーマンス向上のためのJSONキャッシュ
+- カスタムエフェクトラベル形式のサポート

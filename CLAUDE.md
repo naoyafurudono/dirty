@@ -29,8 +29,10 @@ func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 - Implicit effect calculation for undeclared functions
 - Method call support
 - Circular dependency handling
+- Error reporting with detailed diagnostics (DIRTY_VERBOSE=1)
+- sqlc-use integration for automatic database effect detection
 
-**Next:** Error reporting improvements, performance optimization
+**Next:** Performance optimization, cross-package analysis
 
 ## Project Structure
 
