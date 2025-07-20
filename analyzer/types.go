@@ -141,3 +141,10 @@ func (s StringSet) Difference(other StringSet) StringSet {
 	}
 	return diff
 }
+
+// Union returns a new set containing all items from both sets
+func (s StringSet) Union(other StringSet) StringSet {
+	result := s.Clone()
+	result.AddAll(other)
+	return result
+}

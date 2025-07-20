@@ -70,25 +70,22 @@ func ParseEffects(comment string) []string {
 		return nil
 	}
 
-	effectStr := strings.TrimPrefix(comment, "// dirty:")
-	effectStr = strings.TrimSpace(effectStr)
-
-	if effectStr == "" {
+	// Use the new parser
+	expr, err := ParseEffectDecl(comment)
+	if err != nil {
+		// For backward compatibility, return empty on parse error
+		// In the future, we might want to report this error
 		return []string{}
 	}
 
-	// Split by comma and trim spaces
-	parts := strings.Split(effectStr, ",")
-	effects := make([]string, 0, len(parts))
-
-	for _, part := range parts {
-		part = strings.TrimSpace(part)
-		if part != "" {
-			effects = append(effects, part)
-		}
+	// Evaluate the expression to get the set of effects
+	set, err := expr.Eval(nil)
+	if err != nil {
+		return []string{}
 	}
 
-	return effects
+	// Convert to sorted slice
+	return set.ToSlice()
 }
 
 // findMissingEffects returns effects that are in called but not in declared

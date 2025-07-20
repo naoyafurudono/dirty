@@ -9,18 +9,24 @@ This file provides guidance to Claude Code when working with this repository.
 ## Key Concepts
 
 ```go
-// dirty: select[user]
+// dirty: { select[user] }
 func GetUser(id int64) (User, error) { ... }
 
-// dirty: select[user], select[member]
+// dirty: { select[user] | select[member] }
 func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 ```
+
+**Syntax:**
+
+- Effects are declared within `{ }` braces
+- Multiple effects are separated by `|` (pipe)
+- Empty set is `{ }`
+- Effect labels are treated as opaque tokens (e.g., `select[user]`)
 
 **Rules:**
 
 - Functions must declare ALL effects (including those from called functions)
-- Multiple effects are comma-separated
-- Effect labels are treated as opaque tokens (e.g., `select[user]`)
+- The new syntax is based on set notation for future extensibility
 
 ## Implementation Status
 
@@ -31,6 +37,7 @@ func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 - Circular dependency handling
 - Error reporting with detailed diagnostics (DIRTY_VERBOSE=1)
 - sqlc-use integration for automatic database effect detection
+- Extensible effect syntax with set notation (Issue #2)
 
 **Next:** Performance optimization, cross-package analysis
 

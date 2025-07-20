@@ -6,19 +6,19 @@ type UserRepository struct {
 	db string
 }
 
-// dirty: select[user]
+// dirty: { select[user] }
 func (r *UserRepository) FindByID(id int64) error {
 	// SELECT * FROM users WHERE id = ?
 	return nil
 }
 
-// dirty: insert[user]
+// dirty: { insert[user] }
 func (r *UserRepository) Create(name string) error {
 	// INSERT INTO users (name) VALUES (?)
 	return nil
 }
 
-// dirty: update[user]
+// dirty: { update[user] }
 func (r *UserRepository) UpdateName(id int64, name string) error {
 	// UPDATE users SET name = ? WHERE id = ?
 	return nil
@@ -29,7 +29,7 @@ type UserService struct {
 }
 
 // Valid: declares all effects from repository methods
-// dirty: select[user], update[user], insert[audit_log]
+// dirty: { select[user] | update[user] | insert[audit_log] }
 func (s *UserService) UpdateUserWithAudit(id int64, name string) error {
 	// Check user exists
 	if err := s.repo.FindByID(id); err != nil {
@@ -46,7 +46,7 @@ func (s *UserService) UpdateUserWithAudit(id int64, name string) error {
 }
 
 // Invalid: missing select[user] effect
-// dirty: update[user]
+// dirty: { update[user] }
 func (s *UserService) UpdateUserBroken(id int64, name string) error {
 	if err := s.repo.FindByID(id); err != nil { // want "function calls FindByID which has effects \\[select\\[user\\]\\] not declared in this function"
 		return err

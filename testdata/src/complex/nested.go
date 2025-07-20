@@ -2,19 +2,19 @@ package complex
 
 // Test case: nested function calls with effect propagation
 
-// dirty: select[config]
+// dirty: { select[config] }
 func LoadConfig() error {
 	// SELECT * FROM config
 	return nil
 }
 
-// dirty: select[user]
+// dirty: { select[user] }
 func GetUserByID(id int64) error {
 	// SELECT * FROM users WHERE id = ?
 	return nil
 }
 
-// dirty: select[user], insert[audit_log]
+// dirty: { select[user] | insert[audit_log] }
 func GetUserWithAudit(id int64) error {
 	err := GetUserByID(id)
 	if err != nil {
@@ -24,7 +24,7 @@ func GetUserWithAudit(id int64) error {
 	return nil
 }
 
-// dirty: select[config], select[user], insert[audit_log]
+// dirty: { select[config] | select[user] | insert[audit_log] }
 func InitializeUserSession(userID int64) error {
 	// Load configuration first
 	if err := LoadConfig(); err != nil {
@@ -40,7 +40,7 @@ func InitializeUserSession(userID int64) error {
 }
 
 // Invalid: missing config effect
-// dirty: select[user], insert[audit_log]
+// dirty: { select[user] | insert[audit_log] }
 func InitializeUserSessionBroken(userID int64) error {
 	if err := LoadConfig(); err != nil { // want "function calls LoadConfig which has effects \\[select\\[config\\]\\] not declared in this function"
 		return err

@@ -7,12 +7,18 @@ dirtyはGo言語向けのエフェクトシステムもどきです。vetツー�
 関数宣言では、それが起こすエフェクトを表明できます。
 
 ```go
-// dirty: select[user] select[organization] insert[member]
+// dirty: { select[user] | select[organization] | insert[member] }
 func f() {}
 ```
 
-上記のように `// dirty: ` から始まるスペース区切りのエフェクトラベルの列が、その関数が起こすエフェクトです。
+上記のように `// dirty:` から始まり、`{ }` で囲まれた中に `|` で区切られたエフェクトラベルを記述します。
 dirtyではエフェクトラベルの集合として解釈されます。つまり、重複や順序は無視されます。
+
+空のエフェクト宣言も可能です：
+```go
+// dirty: { }
+func emptyEffects() {}
+```
 
 ## 検査
 
@@ -22,7 +28,7 @@ dirtyはモジュール内の関数宣言を走査しエフェクトの表明が
 そのため、okのエフェクトはfのエフェクトのスーパーセットである必要があります。
 
 ```go
-// dirty: select[user] select[organization] insert[member] insert[user]
+// dirty: { select[user] | select[organization] | insert[member] | insert[user] }
 func ok() {
 	...
 	f()
@@ -33,7 +39,7 @@ func ok() {
 したがって、以下のようにfのエフェクトを包含しないエフェクトしか表明しない場合は、エフェクトの検査が失敗します。
 
 ```go
-// dirty: select[user]
+// dirty: { select[user] }
 func ng() {
 	...
 	f()
@@ -50,14 +56,14 @@ func implicit() {
 	...
 }
 
-// dirty: select[user] select[organization] insert[member] insert[user]
+// dirty: { select[user] | select[organization] | insert[member] | insert[user] }
 func ok() {
 	...
 	implicit()
 	...
 }
 
-// dirty: select[user]
+// dirty: { select[user] }
 func ng() {
 	...
 	implicit()
