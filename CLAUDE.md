@@ -43,12 +43,41 @@ mkdir -p cmd/dirty
 
 ## Implementation Architecture
 
-When implementing:
+### Current Implementation Status
 
-1. **AST Parser**: Extract `//dirty:` annotations from Go source files
-2. **Effect Checker**: Verify effect consistency across function calls
-3. **CLI Tool**: Provide command-line interface for running checks
-4. **Integration**: Consider implementing as a `go vet` compatible analyzer
+The analyzer currently implements basic effect checking:
+- Parses `//dirty:` comments and extracts effect tokens
+- Checks direct function calls for effect consistency
+- Reports errors at call sites when effects are missing
+
+### Planned Architecture (See docs/design.md)
+
+1. **Effect Collection Phase**: 
+   - Extract `//dirty:` annotations from all functions
+   - Build initial effect sets from declarations
+
+2. **Call Graph Construction**:
+   - Analyze function bodies to find all function calls
+   - Build bidirectional call graph (calls/called-by)
+   - Support both direct calls and method calls
+
+3. **Effect Propagation**:
+   - Compute implicit effects for functions without declarations
+   - Use worklist algorithm for efficient propagation
+   - Handle circular dependencies correctly
+
+4. **Consistency Checking**:
+   - Verify declared effects include all computed effects
+   - Only check functions with explicit `//dirty:` comments
+   - Report detailed errors with call chains
+
+### Key Implementation Files
+
+- `analyzer/analyzer.go`: Core analysis logic
+- `analyzer/analyzer_test.go`: Test suite
+- `testdata/`: Test cases demonstrating various scenarios
+- `docs/design.md`: Detailed design documentation
+- `docs/implementation-proposal.md`: Concrete implementation plan
 
 ## Current Limitations (from design)
 
