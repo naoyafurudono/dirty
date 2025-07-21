@@ -25,7 +25,7 @@ func TestCrossPackageAnalysisWithFacts(t *testing.T) {
 	skipIfNoFactsSupport(t)
 
 	// Enable Facts explicitly
-	os.Unsetenv("DIRTY_DISABLE_FACTS")
+	_ = os.Unsetenv("DIRTY_DISABLE_FACTS")
 
 	testdata := analysistest.TestData()
 	analysistest.Run(t, testdata, analyzer.Analyzer, "crosspackage/...")
@@ -35,11 +35,11 @@ func TestCrossPackageDebugWithFacts(t *testing.T) {
 	skipIfNoFactsSupport(t)
 
 	// Enable Facts explicitly
-	os.Unsetenv("DIRTY_DISABLE_FACTS")
+	_ = os.Unsetenv("DIRTY_DISABLE_FACTS")
 
 	// Enable verbose mode for debugging
-	os.Setenv("DIRTY_VERBOSE", "1")
-	defer os.Unsetenv("DIRTY_VERBOSE")
+	_ = os.Setenv("DIRTY_VERBOSE", "1")
+	defer func() { _ = os.Unsetenv("DIRTY_VERBOSE") }()
 
 	testdata := analysistest.TestData()
 	analysistest.Run(t, testdata, analyzer.Analyzer, "crosspackage/pkg2")
@@ -49,7 +49,7 @@ func TestFactCrossPackageWithFacts(t *testing.T) {
 	skipIfNoFactsSupport(t)
 
 	// Enable Facts explicitly
-	os.Unsetenv("DIRTY_DISABLE_FACTS")
+	_ = os.Unsetenv("DIRTY_DISABLE_FACTS")
 
 	testdata := analysistest.TestData()
 
@@ -81,7 +81,7 @@ func TestSimpleCrossPackageWithFacts(t *testing.T) {
 	skipIfNoFactsSupport(t)
 
 	// Enable Facts explicitly
-	os.Unsetenv("DIRTY_DISABLE_FACTS")
+	_ = os.Unsetenv("DIRTY_DISABLE_FACTS")
 
 	testdata := analysistest.TestData()
 
@@ -118,7 +118,7 @@ func copyDir(src, dst string) error {
 			return os.MkdirAll(dstPath, info.Mode())
 		}
 
-		data, err := os.ReadFile(path)
+		data, err := os.ReadFile(path) // #nosec G304 - path is constructed from known test data
 		if err != nil {
 			return err
 		}
