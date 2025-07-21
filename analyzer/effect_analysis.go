@@ -20,6 +20,9 @@ type EffectAnalysis struct {
 
 	// DisableFacts disables fact export (for testing)
 	DisableFacts bool
+
+	// UnifiedEffectResolver provides unified effect resolution
+	Resolver *UnifiedEffectResolver
 }
 
 // NewEffectAnalysis creates a new EffectAnalysis
@@ -29,6 +32,7 @@ func NewEffectAnalysis(pass *analysis.Pass, inspect *inspector.Inspector) *Effec
 		Inspector: inspect,
 		Functions: make(map[string]*FunctionInfo),
 		CallGraph: NewCallGraph(),
+		Resolver:  NewUnifiedEffectResolver(),
 	}
 }
 
@@ -68,6 +72,7 @@ func (ea *EffectAnalysis) CollectFunctions() {
 		}
 
 		ea.Functions[funcName] = info
+		ea.Resolver.AddLocalFunction(funcName, info)
 	})
 }
 

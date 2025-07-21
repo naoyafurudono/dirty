@@ -76,6 +76,10 @@ func run(pass *analysis.Pass) (any, error) {
 		// Silently ignore errors loading JSON
 	}
 	effectAnalysis.JSONEffects = jsonEffects
+	effectAnalysis.Resolver.SetJSONEffects(jsonEffects)
+
+	// Phase 0: Import effects from other packages via Facts
+	effectAnalysis.ImportAllPackageEffects()
 
 	// Phase 1: Collect all functions and their declared effects
 	effectAnalysis.CollectFunctions()
