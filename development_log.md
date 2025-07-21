@@ -502,3 +502,26 @@ type FunctionEffectsFact struct {
 - Factsは情報共有の仕組みであり、診断生成の仕組みではない
 - 良い設計では、Factsなしでも解析が正しく動作する
 - printfのようなGoの標準アナライザーがベストプラクティスを示している
+
+### Facts再設計の実装 ✅
+
+1. **Phase 1: UnifiedEffectResolverの実装**（完了）
+   - 統一的な効果解決層を作成
+   - ローカル関数、Facts、JSONの3つのソースを統合
+   - 優先順位: ローカル > Facts > JSON
+   - ImportAllPackageEffectsでFactsをResolverに読み込み
+
+2. **Phase 2: 診断の独立化**（完了）
+   - foundInFactsフラグを削除
+   - UnifiedEffectResolverを使用するように修正
+   - 効果の取得元に関わらず同じ診断ロジックを適用
+   - テストが全て通ることを確認
+
+実装の詳細:
+- `UnifiedEffectResolver`: 効果情報の統一的な解決
+- `SourceUnknown/Local/Facts/JSON`: 情報源の明確化
+- crosspackage_v3.goの簡素化
+
+### 今後の作業
+- Phase 3: アーキテクチャの簡素化（DisableFactsフラグの削除など）
+- Phase 4: パフォーマンス最適化（キャッシュ、並列処理など）
