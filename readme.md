@@ -1,5 +1,9 @@
 # dirty
 
+[![CI](https://github.com/naoyafurudono/dirty/workflows/CI/badge.svg)](https://github.com/naoyafurudono/dirty/actions)
+[![codecov](https://codecov.io/gh/naoyafurudono/dirty/branch/main/graph/badge.svg)](https://codecov.io/gh/naoyafurudono/dirty)
+[![Go Report Card](https://goreportcard.com/badge/github.com/naoyafurudono/dirty)](https://goreportcard.com/report/github.com/naoyafurudono/dirty)
+
 dirtyはGo言語向けのエフェクトシステムもどきです。vetツールとして用います。
 
 ## 表記
