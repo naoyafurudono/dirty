@@ -56,12 +56,17 @@ func run(pass *analysis.Pass) (any, error) {
 	effectAnalysis.BuildCallGraph()
 
 	// Phase 2.5: Enhance with cross-package support
-	EnhanceWithCrossPackageSupportV2(effectAnalysis)
+	EnhanceWithCrossPackageSupportV3(effectAnalysis)
+
+	// Debug: Print package facts
+	effectAnalysis.debugPackageFacts()
 
 	// Phase 3: Propagate effects
+	effectAnalysis.debugPropagateEffects()
 	effectAnalysis.PropagateEffects()
 
 	// Phase 4: Check effect consistency
+	effectAnalysis.debugCheckEffects()
 	effectAnalysis.CheckEffects()
 
 	// Phase 5: Export effects as Facts for dependent packages
