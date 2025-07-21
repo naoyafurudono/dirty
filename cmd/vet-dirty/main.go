@@ -1,3 +1,4 @@
+// Package main provides a go vet compatible interface for dirty effect analysis
 package main
 
 import (

@@ -1,3 +1,4 @@
+// Package analyzer provides static analysis for effect tracking in Go code
 package analyzer
 
 import (
@@ -19,10 +20,10 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	insp := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 
 	// Create effect analysis
-	effectAnalysis := NewEffectAnalysis(pass, inspector)
+	effectAnalysis := NewEffectAnalysis(pass, insp)
 
 	// Load JSON effects if available
 	jsonPath := os.Getenv("DIRTY_EFFECTS_JSON")
@@ -83,4 +84,3 @@ func ParseEffects(comment string) []string {
 	// Convert to sorted slice
 	return set.ToSlice()
 }
-

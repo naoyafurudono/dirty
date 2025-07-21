@@ -1,3 +1,4 @@
+// Package main provides the main dirty effect analyzer CLI tool
 package main
 
 import (

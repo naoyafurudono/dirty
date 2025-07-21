@@ -21,7 +21,7 @@ type EffectLabel struct {
 }
 
 // Eval evaluates the effect label and returns a set containing this single effect
-func (e *EffectLabel) Eval(resolver EffectResolver) (StringSet, error) {
+func (e *EffectLabel) Eval(_ EffectResolver) (StringSet, error) {
 	return NewStringSet(e.String()), nil
 }
 

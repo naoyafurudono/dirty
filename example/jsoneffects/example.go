@@ -77,12 +77,27 @@ func UseHelper(userID string) error {
 
 // GetUserFromDB retrieves user data from database (declared in JSON)
 func GetUserFromDB(_ string) error { return nil }
+
+// CreateUserInDB creates a new user in the database
 func CreateUserInDB(_ string) error { return nil }
+
+// UpdateUserStatusInDB updates user status in the database
 func UpdateUserStatusInDB(_, _ string) error { return nil }
+
+// DeleteUserFromDB removes a user from the database
 func DeleteUserFromDB(_ string) error { return nil }
+
+// SendEmailNotification sends an email notification to the user
 func SendEmailNotification(_ string) error { return nil }
+
 // CallExternalAPI makes external API calls
 func CallExternalAPI() (string, error) { return "", nil }
-func ValidateUserInput(email string) error { return nil }
+
+// ValidateUserInput validates user input data
+func ValidateUserInput(_ string) error { return nil }
+
+// ComputeHash computes a hash of the given data
 func ComputeHash(_ string) string { return "" }
+
+// LogActivity logs an activity event
 func LogActivity(_ string) {}
