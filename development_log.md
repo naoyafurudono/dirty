@@ -300,3 +300,13 @@ JSONエフェクト定義を拡張し、パッケージごとに異なるエフ�
    - Phase 3: 高度な機能（メソッド、import alias等）
 
 詳細設計: `docs/package-aware-json-effects.md`
+
+### メソッドのJSON効果定義での挙動検証 ✅
+
+現在の実装における挙動：
+- メソッドも関数と同様、名前のみで識別される
+- レシーバーの型情報は完全に無視される
+- `(*UserService).GetUser`と`(*OrderService).GetUser`は両方とも`GetUser`として扱われる
+- メソッド記法（`(*Type).Method`）は認識されない
+
+結論：メソッドについても型を区別する仕組みが必要。
