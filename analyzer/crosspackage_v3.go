@@ -9,6 +9,10 @@ import (
 // EnhanceWithCrossPackageSupportV3 adds cross-package analysis capabilities using Facts
 // This version properly adds CallSites for cross-package calls
 func EnhanceWithCrossPackageSupportV3(ea *EffectAnalysis) {
+	// Skip cross-package analysis if Facts are disabled
+	if ea.DisableFacts {
+		return
+	}
 	// Analyze imports for all files
 	imports := make(map[string]string)
 	for _, file := range ea.Pass.Files {

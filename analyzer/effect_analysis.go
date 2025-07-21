@@ -17,6 +17,9 @@ type EffectAnalysis struct {
 
 	// JSON effect declarations
 	JSONEffects ParsedEffects
+
+	// DisableFacts disables fact export (for testing)
+	DisableFacts bool
 }
 
 // NewEffectAnalysis creates a new EffectAnalysis
