@@ -14,7 +14,7 @@ type EffectDeclarations struct {
 
 // LoadEffectDeclarations loads effect declarations from JSON
 func LoadEffectDeclarations(path string) (*EffectDeclarations, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304 - path is provided by user/environment
 	if err != nil {
 		return nil, err
 	}

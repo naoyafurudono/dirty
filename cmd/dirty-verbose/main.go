@@ -1,3 +1,4 @@
+// Package main implements a verbose version of the dirty analyzer
 package main
 
 import (
@@ -16,7 +17,10 @@ func main() {
 
 	if *verbose {
 		// Set environment variable for analyzer to detect
-		os.Setenv("DIRTY_VERBOSE", "1")
+		if err := os.Setenv("DIRTY_VERBOSE", "1"); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to set DIRTY_VERBOSE: %v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	// Print usage if verbose

@@ -1,3 +1,4 @@
+// Package main implements the dirty effect analyzer CLI
 package main
 
 import (

@@ -1,3 +1,4 @@
+// Package main implements a full vet analyzer including dirty effects
 package main
 
 import (

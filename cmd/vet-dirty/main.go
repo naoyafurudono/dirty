@@ -1,3 +1,4 @@
+// Package main provides a vetted analyzer for dirty effects
 package main
 
 import (

@@ -75,13 +75,29 @@ func UseHelper(userID string) error {
 	return nil
 }
 
-// Functions that are declared in JSON but defined as stubs here
+// GetUserFromDB retrieves a user from the database (stub)
 func GetUserFromDB(_ string) error { return nil }
+
+// CreateUserInDB creates a new user in the database (stub)
 func CreateUserInDB(_ string) error { return nil }
+
+// UpdateUserStatusInDB updates user status in the database (stub)
 func UpdateUserStatusInDB(_, _ string) error { return nil }
+
+// DeleteUserFromDB deletes a user from the database (stub)
 func DeleteUserFromDB(_ string) error { return nil }
+
+// SendEmailNotification sends an email notification (stub)
 func SendEmailNotification(_ string) error { return nil }
+
+// CallExternalAPI is a stub function for external API calls
 func CallExternalAPI() (string, error) { return "", nil }
+
+// ValidateUserInput validates user input (stub)
 func ValidateUserInput(_ string) error { return nil }
+
+// ComputeHash computes a hash of the input data (stub)
 func ComputeHash(_ string) string { return "" }
+
+// LogActivity logs an activity event (stub)
 func LogActivity(_ string) {}
