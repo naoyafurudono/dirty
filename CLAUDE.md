@@ -31,6 +31,7 @@ func GetUserWithMember(userID int64) (User, []Member, error) { ... }
 ## Implementation Status
 
 **Completed:** ✅
+
 - Basic effect checking at call sites
 - Implicit effect calculation for undeclared functions
 - Method call support
@@ -59,3 +60,11 @@ Keep code base to pass all tests.
 ## Release
 
 Increment git tag version when new feature added.
+
+## QA
+
+After you have completed all tasks, run the following command to ensure everything is working correctly:
+
+```
+make ci
+```

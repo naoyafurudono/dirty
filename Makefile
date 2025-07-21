@@ -36,4 +36,4 @@ lint:
 	golangci-lint run
 
 # Run all checks
-check: fmt test lint
+ci: fmt test lint
