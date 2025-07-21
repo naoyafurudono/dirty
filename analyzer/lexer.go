@@ -53,7 +53,6 @@ func (l *Lexer) readChar() {
 	l.pos++
 }
 
-
 // skipWhitespace skips whitespace characters
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
