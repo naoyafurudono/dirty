@@ -49,32 +49,19 @@ func EnhanceWithCrossPackageSupportV3(ea *EffectAnalysis) {
 						// It's an imported package function
 						resolvedName := pkgPath + "." + fun.Sel.Name
 
-						// Try to resolve effects using Facts first
-						effects, foundInFacts := ea.ResolveCrossPackageCall(call, pkgPath, fun.Sel.Name)
+						// Use UnifiedEffectResolver to get effects
+						effects, source := ea.Resolver.ResolveEffects(resolvedName)
 
-						// If not found in Facts, fall back to JSON
-						if !foundInFacts && ea.JSONEffects != nil {
-							effects = NewStringSet()
-							// Try with full path
-							if effectExpr, ok := ea.JSONEffects[resolvedName]; ok {
-								if evalEffects, err := effectExpr.Eval(nil); err == nil {
-									effects = evalEffects
-									foundInFacts = true
-								}
-							} else if effectExpr, ok := ea.JSONEffects[fun.Sel.Name]; ok {
-								// Try with just function name for backward compatibility
-								if evalEffects, err := effectExpr.Eval(nil); err == nil {
-									effects = evalEffects
-									foundInFacts = true
-								}
-							}
+						// If not found with full path, try just function name for backward compatibility
+						if source == SourceUnknown {
+							effects, source = ea.Resolver.ResolveEffects(fun.Sel.Name)
 						}
 
 						// Add to call graph
 						ea.CallGraph.AddCall(funcName, resolvedName, call.Pos())
 
-						// Create a synthetic function info for the imported function
-						if foundInFacts {
+						// Create a synthetic function info if we found effects
+						if source != SourceUnknown {
 							if _, exists := ea.Functions[resolvedName]; !exists {
 								ea.Functions[resolvedName] = &FunctionInfo{
 									Name:            resolvedName,
