@@ -51,6 +51,9 @@ func run(pass *analysis.Pass) (any, error) {
 	// Phase 2: Build call graph
 	effectAnalysis.BuildCallGraph()
 
+	// Phase 2.5: Enhance with cross-package support
+	EnhanceWithCrossPackageSupport(effectAnalysis)
+
 	// Phase 3: Propagate effects
 	effectAnalysis.PropagateEffects()
 

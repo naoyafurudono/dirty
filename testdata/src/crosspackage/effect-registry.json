@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "effects": {
+    "GetUser": "{ select[users] }",
+    "CreateUser": "{ insert[users] }",
+    "UpdateUser": "{ update[users] }",
+    "GetUserName": "{ select[users] }",
+    "ProcessUser": "{ select[users] | transform }",
+    "ProcessUserIncorrect": "{ transform }",
+    "CreateAndNotify": "{ insert[users] | event[user.created] }",
+    "GetProcessedUserName": "{ select[users] }",
+    "HandleGetUser": "{ select[users] | transform | http_response }",
+    "HandleGetUserIncorrect": "{ http_response }",
+    "HandleCreateUser": "{ insert[users] | event[user.created] | http_response }",
+    "GetUserNameViaService": "{ select[users] }"
+  }
+}

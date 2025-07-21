@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "effects": {
+    "github.com/naoyafurudono/dirty/example/crosspackage/db.GetUserByID": "{ select[users] }",
+    "github.com/naoyafurudono/dirty/example/crosspackage/db.CreateUser": "{ insert[users] }",
+    "github.com/naoyafurudono/dirty/example/crosspackage/db.UpdateUserEmail": "{ update[users] }",
+    "github.com/naoyafurudono/dirty/example/crosspackage/db.DeleteUser": "{ delete[users] }",
+    "github.com/naoyafurudono/dirty/example/crosspackage/service.(*UserService).GetUser": "{ select[users] }",
+    "github.com/naoyafurudono/dirty/example/crosspackage/service.(*UserService).CreateUser": "{ insert[users] | event[user.created] }",
+    "github.com/naoyafurudono/dirty/example/crosspackage/service.(*UserService).UpdateUserEmailIfExists": "{ select[users] | update[users] }"
+  }
+}
