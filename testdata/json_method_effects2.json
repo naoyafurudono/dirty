@@ -1,0 +1,16 @@
+{
+  "functions": [
+    {
+      "name": "(*UserService).GetUser",
+      "effects": "{ select[users] }"
+    },
+    {
+      "name": "(*OrderService).GetUser",
+      "effects": "{ select[orders] }"
+    },
+    {
+      "name": "(UserService).GetUserByValue",
+      "effects": "{ select[users_by_value] }"
+    }
+  ]
+}

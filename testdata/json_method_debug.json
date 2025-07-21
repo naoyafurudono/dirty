@@ -1,0 +1,8 @@
+{
+  "functions": [
+    {
+      "name": "Process",
+      "effects": "{ file_write }"
+    }
+  ]
+}
