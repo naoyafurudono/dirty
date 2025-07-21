@@ -2,10 +2,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/naoyafurudono/dirty/analyzer"
 	"golang.org/x/tools/go/analysis/singlechecker"
-	"os"
 )
 
 func main() {
