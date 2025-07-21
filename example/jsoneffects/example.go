@@ -1,3 +1,4 @@
+// Package main demonstrates JSON-based effect declarations
 package main
 
 import "fmt"
@@ -74,13 +75,14 @@ func UseHelper(userID string) error {
 	return nil
 }
 
-// Functions that are declared in JSON but defined as stubs here
-func GetUserFromDB(email string) error { return nil }
-func CreateUserInDB(email string) error { return nil }
-func UpdateUserStatusInDB(userID, status string) error { return nil }
-func DeleteUserFromDB(userID string) error { return nil }
-func SendEmailNotification(email string) error { return nil }
+// GetUserFromDB retrieves user data from database (declared in JSON)
+func GetUserFromDB(_ string) error { return nil }
+func CreateUserInDB(_ string) error { return nil }
+func UpdateUserStatusInDB(_, _ string) error { return nil }
+func DeleteUserFromDB(_ string) error { return nil }
+func SendEmailNotification(_ string) error { return nil }
+// CallExternalAPI makes external API calls
 func CallExternalAPI() (string, error) { return "", nil }
 func ValidateUserInput(email string) error { return nil }
-func ComputeHash(data string) string { return "" }
-func LogActivity(activity string) {}
+func ComputeHash(_ string) string { return "" }
+func LogActivity(_ string) {}

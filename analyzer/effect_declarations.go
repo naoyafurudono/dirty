@@ -14,6 +14,7 @@ type EffectDeclarations struct {
 
 // LoadEffectDeclarations loads effect declarations from JSON
 func LoadEffectDeclarations(path string) (*EffectDeclarations, error) {
+	// #nosec G304 - path is controlled by DIRTY_EFFECTS_JSON env var or package directory
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err

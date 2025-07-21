@@ -19,10 +19,10 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 
 	// Create effect analysis
-	analysis := NewEffectAnalysis(pass, inspect)
+	effectAnalysis := NewEffectAnalysis(pass, inspector)
 
 	// Load JSON effects if available
 	jsonPath := os.Getenv("DIRTY_EFFECTS_JSON")
@@ -42,19 +42,19 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		}
 		// Silently ignore errors loading JSON
 	}
-	analysis.JSONEffects = jsonEffects
+	effectAnalysis.JSONEffects = jsonEffects
 
 	// Phase 1: Collect all functions and their declared effects
-	analysis.CollectFunctions()
+	effectAnalysis.CollectFunctions()
 
 	// Phase 2: Build call graph
-	analysis.BuildCallGraph()
+	effectAnalysis.BuildCallGraph()
 
 	// Phase 3: Propagate effects
-	analysis.PropagateEffects()
+	effectAnalysis.PropagateEffects()
 
 	// Phase 4: Check effect consistency
-	analysis.CheckEffects()
+	effectAnalysis.CheckEffects()
 
 	return nil, nil
 }
@@ -84,19 +84,3 @@ func ParseEffects(comment string) []string {
 	return set.ToSlice()
 }
 
-// findMissingEffects returns effects that are in called but not in declared
-func findMissingEffects(called, declared []string) []string {
-	declaredSet := make(map[string]bool)
-	for _, effect := range declared {
-		declaredSet[effect] = true
-	}
-
-	var missing []string
-	for _, effect := range called {
-		if !declaredSet[effect] {
-			missing = append(missing, effect)
-		}
-	}
-
-	return missing
-}

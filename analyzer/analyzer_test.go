@@ -75,6 +75,6 @@ func equalStringSlices(a, b []string) bool {
 	return true
 }
 
-func TestCheckFunctionEffects(t *testing.T) {
+func TestCheckFunctionEffects(_ *testing.T) {
 	// TODO: Add tests for function effect checking
 }

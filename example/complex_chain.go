@@ -1,22 +1,25 @@
+// Package example demonstrates complex effect chaining scenarios
 package example
 
-// Base effects
+// LoadConfig loads configuration with config selection effects
 // dirty: { select[config] }
 func LoadConfig() error {
 	return nil
 }
 
+// GetUserData retrieves user data with user selection effects
 // dirty: { select[user] }
-func GetUserData(id int64) error {
+func GetUserData(_ int64) error {
 	return nil
 }
 
+// WriteAuditLog writes audit logs with audit insertion effects
 // dirty: { insert[audit] }
-func WriteAuditLog(msg string) error {
+func WriteAuditLog(_ string) error {
 	return nil
 }
 
-// チェーン1: 設定を読み込んでユーザーを取得
+// LoadUserWithConfig loads config and retrieves user data (chain 1: load config and get user)
 func LoadUserWithConfig(id int64) error {
 	if err := LoadConfig(); err != nil {
 		return err
@@ -24,7 +27,7 @@ func LoadUserWithConfig(id int64) error {
 	return GetUserData(id)
 }
 
-// チェーン2: ユーザーを取得して監査ログを書く
+// GetUserWithAudit gets user data and writes audit log (chain 2: get user and write audit)
 func GetUserWithAudit(id int64) error {
 	if err := GetUserData(id); err != nil {
 		return err
@@ -32,7 +35,7 @@ func GetUserWithAudit(id int64) error {
 	return WriteAuditLog("user accessed")
 }
 
-// チェーン3: すべてを組み合わせる
+// ComplexOperation combines all operations (chain 3: combine everything)
 func ComplexOperation(id int64) error {
 	if err := LoadUserWithConfig(id); err != nil {
 		return err
@@ -40,7 +43,7 @@ func ComplexOperation(id int64) error {
 	return GetUserWithAudit(id)
 }
 
-// エラー: 深い呼び出しチェーンのエフェクトが不足
+// BrokenDeepChain demonstrates missing effects in deep call chains (error: missing effects in deep call chain)
 // dirty: { insert[audit] }
 func BrokenDeepChain(id int64) error {
 	// ComplexOperationは以下のエフェクトを持つ:

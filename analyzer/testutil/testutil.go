@@ -1,3 +1,4 @@
+// Package testutil provides utility functions for testing the dirty analyzer
 package testutil
 
 import (

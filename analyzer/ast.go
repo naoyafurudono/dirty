@@ -20,6 +20,7 @@ type EffectLabel struct {
 	Target    string // "users", "logs", etc.
 }
 
+// Eval evaluates the effect label and returns a set containing this single effect
 func (e *EffectLabel) Eval(resolver EffectResolver) (StringSet, error) {
 	return NewStringSet(e.String()), nil
 }
@@ -34,6 +35,7 @@ type LiteralSet struct {
 	Elements []EffectExpr // Slice of elements in the set
 }
 
+// Eval evaluates the literal set by unioning all its element effects
 func (s *LiteralSet) Eval(resolver EffectResolver) (StringSet, error) {
 	result := NewStringSet()
 	for _, elem := range s.Elements {
@@ -63,6 +65,7 @@ type EffectRef struct {
 	Name string
 }
 
+// Eval evaluates the effect reference by resolving it through the provided resolver
 func (r *EffectRef) Eval(resolver EffectResolver) (StringSet, error) {
 	if resolver == nil {
 		return nil, fmt.Errorf("cannot resolve effect reference '%s': no resolver provided", r.Name)
@@ -82,6 +85,7 @@ type EffectResolver interface {
 // NilResolver is a resolver that always returns an error
 type NilResolver struct{}
 
+// Resolve always returns an error since NilResolver doesn't support effect references
 func (NilResolver) Resolve(name string) (StringSet, error) {
 	return nil, fmt.Errorf("effect reference '%s' not supported in Phase 1", name)
 }

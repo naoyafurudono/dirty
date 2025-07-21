@@ -1,20 +1,20 @@
 package example
 
-// データベースアクセスを行う関数
+// GetUserByID performs database access to retrieve user data
 // dirty: { select[user] }
-func GetUserByID(id int64) error {
+func GetUserByID(_ int64) error {
 	// SELECT * FROM users WHERE id = ?
 	return nil
 }
 
-// ログを記録する関数
+// WriteLog records log messages
 // dirty: { insert[log] }
-func WriteLog(message string) error {
+func WriteLog(_ string) error {
 	// INSERT INTO logs (message) VALUES (?)
 	return nil
 }
 
-// 正しい例: 必要なエフェクトをすべて宣言
+// ProcessUser correctly declares all required effects
 // dirty: { select[user] | insert[log] }
 func ProcessUser(id int64) error {
 	if err := GetUserByID(id); err != nil {
@@ -23,7 +23,7 @@ func ProcessUser(id int64) error {
 	return WriteLog("user processed")
 }
 
-// エラーになる例: select[user]エフェクトが不足
+// ProcessUserBroken demonstrates missing effects (error: missing select[user] effect)
 // dirty: { insert[log] }
 func ProcessUserBroken(id int64) error {
 	if err := GetUserByID(id); err != nil {
@@ -32,12 +32,12 @@ func ProcessUserBroken(id int64) error {
 	return WriteLog("user processed")
 }
 
-// 宣言なし関数（チェック対象外だが、暗黙的にエフェクトを持つ）
+// HelperFunction has no declarations but implicitly has effects (not checked but has implicit effects)
 func HelperFunction(id int64) error {
 	return GetUserByID(id)
 }
 
-// エラーになる例: HelperFunctionの暗黙的エフェクトが不足
+// UseHelper demonstrates missing implicit effects (error: missing HelperFunction's implicit effects)
 // dirty: { insert[log] }
 func UseHelper(id int64) error {
 	if err := HelperFunction(id); err != nil {

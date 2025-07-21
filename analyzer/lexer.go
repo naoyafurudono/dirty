@@ -8,17 +8,18 @@ import (
 // TokenType represents the type of a token
 type TokenType int
 
+// TokenType constants define the types of tokens in effect expressions
 const (
-	TOKEN_EOF TokenType = iota
-	TOKEN_LBRACE      // {
-	TOKEN_RBRACE      // }
-	TOKEN_LPAREN      // (
-	TOKEN_RPAREN      // )
-	TOKEN_PIPE        // |
-	TOKEN_LBRACKET    // [
-	TOKEN_RBRACKET    // ]
-	TOKEN_IDENT       // identifier
-	TOKEN_ILLEGAL     // illegal token
+	TokenEOF TokenType = iota
+	TokenLBrace      // {
+	TokenRBrace      // }
+	TokenLParen      // (
+	TokenRParen      // )
+	TokenPipe        // |
+	TokenLBracket    // [
+	TokenRBracket    // ]
+	TokenIdent       // identifier
+	TokenIllegal     // illegal token
 )
 
 // Token represents a lexical token
@@ -52,13 +53,6 @@ func (l *Lexer) readChar() {
 	l.pos++
 }
 
-// peekChar returns the next character without advancing
-func (l *Lexer) peekChar() rune {
-	if l.pos >= len(l.input) {
-		return 0
-	}
-	return rune(l.input[l.pos])
-}
 
 // skipWhitespace skips whitespace characters
 func (l *Lexer) skipWhitespace() {
@@ -73,7 +67,7 @@ func (l *Lexer) readIdentifier() string {
 	for isLetter(l.ch) || isDigit(l.ch) || l.ch == '_' || l.ch == '-' || l.ch == '.' {
 		l.readChar()
 	}
-	return l.input[start:l.pos-1]
+	return l.input[start : l.pos-1]
 }
 
 // NextToken returns the next token
@@ -86,43 +80,43 @@ func (l *Lexer) NextToken() Token {
 
 	switch l.ch {
 	case '{':
-		tok.Type = TOKEN_LBRACE
+		tok.Type = TokenLBrace
 		tok.Value = "{"
 		l.readChar()
 	case '}':
-		tok.Type = TOKEN_RBRACE
+		tok.Type = TokenRBrace
 		tok.Value = "}"
 		l.readChar()
 	case '(':
-		tok.Type = TOKEN_LPAREN
+		tok.Type = TokenLParen
 		tok.Value = "("
 		l.readChar()
 	case ')':
-		tok.Type = TOKEN_RPAREN
+		tok.Type = TokenRParen
 		tok.Value = ")"
 		l.readChar()
 	case '|':
-		tok.Type = TOKEN_PIPE
+		tok.Type = TokenPipe
 		tok.Value = "|"
 		l.readChar()
 	case '[':
-		tok.Type = TOKEN_LBRACKET
+		tok.Type = TokenLBracket
 		tok.Value = "["
 		l.readChar()
 	case ']':
-		tok.Type = TOKEN_RBRACKET
+		tok.Type = TokenRBracket
 		tok.Value = "]"
 		l.readChar()
 	case 0:
-		tok.Type = TOKEN_EOF
+		tok.Type = TokenEOF
 		tok.Value = ""
 	default:
 		if isLetter(l.ch) {
 			tok.Value = l.readIdentifier()
-			tok.Type = TOKEN_IDENT
+			tok.Type = TokenIdent
 			return tok
 		}
-		tok.Type = TOKEN_ILLEGAL
+		tok.Type = TokenIllegal
 		tok.Value = string(l.ch)
 		l.readChar()
 	}
@@ -143,25 +137,25 @@ func isDigit(ch rune) bool {
 // TokenString returns a string representation of a token type
 func TokenString(t TokenType) string {
 	switch t {
-	case TOKEN_EOF:
+	case TokenEOF:
 		return "EOF"
-	case TOKEN_LBRACE:
+	case TokenLBrace:
 		return "{"
-	case TOKEN_RBRACE:
+	case TokenRBrace:
 		return "}"
-	case TOKEN_LPAREN:
+	case TokenLParen:
 		return "("
-	case TOKEN_RPAREN:
+	case TokenRParen:
 		return ")"
-	case TOKEN_PIPE:
+	case TokenPipe:
 		return "|"
-	case TOKEN_LBRACKET:
+	case TokenLBracket:
 		return "["
-	case TOKEN_RBRACKET:
+	case TokenRBracket:
 		return "]"
-	case TOKEN_IDENT:
+	case TokenIdent:
 		return "IDENT"
-	case TOKEN_ILLEGAL:
+	case TokenIllegal:
 		return "ILLEGAL"
 	default:
 		return fmt.Sprintf("UNKNOWN(%d)", t)
@@ -170,7 +164,7 @@ func TokenString(t TokenType) string {
 
 // String returns a string representation of a token
 func (t Token) String() string {
-	if t.Type == TOKEN_IDENT || t.Type == TOKEN_ILLEGAL {
+	if t.Type == TokenIdent || t.Type == TokenIllegal {
 		return fmt.Sprintf("%s(%s)", TokenString(t.Type), t.Value)
 	}
 	return TokenString(t.Type)

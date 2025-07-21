@@ -16,7 +16,9 @@ func main() {
 
 	if *verbose {
 		// Set environment variable for analyzer to detect
-		os.Setenv("DIRTY_VERBOSE", "1")
+		if err := os.Setenv("DIRTY_VERBOSE", "1"); err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: failed to set DIRTY_VERBOSE: %v\n", err)
+		}
 	}
 
 	// Print usage if verbose
