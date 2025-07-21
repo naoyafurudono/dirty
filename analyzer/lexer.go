@@ -10,16 +10,16 @@ type TokenType int
 
 // TokenType constants define the types of tokens in effect expressions
 const (
-	TokenEOF TokenType = iota
-	TokenLBrace      // {
-	TokenRBrace      // }
-	TokenLParen      // (
-	TokenRParen      // )
-	TokenPipe        // |
-	TokenLBracket    // [
-	TokenRBracket    // ]
-	TokenIdent       // identifier
-	TokenIllegal     // illegal token
+	TokenEOF      TokenType = iota
+	TokenLBrace              // {
+	TokenRBrace              // }
+	TokenLParen              // (
+	TokenRParen              // )
+	TokenPipe                // |
+	TokenLBracket            // [
+	TokenRBracket            // ]
+	TokenIdent               // identifier
+	TokenIllegal             // illegal token
 )
 
 // Token represents a lexical token
