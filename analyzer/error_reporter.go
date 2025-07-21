@@ -21,18 +21,18 @@ type EffectError struct {
 type PropagationStep struct {
 	Function string
 	Effects  []string
-	Source   string // どこからエフェクトが来たか
+	Source   string // where the effect comes from
 }
 
 // Format formats the error message with detailed information
 func (e *EffectError) Format() string {
 	var b strings.Builder
 
-	// メインエラーメッセージ
+	// Main error message
 	b.WriteString(fmt.Sprintf("function calls %s which has effects [%s] not declared in this function\n",
 		e.Callee, strings.Join(e.CalleeEffects, ", ")))
 
-	// 詳細情報
+	// Detailed information
 	b.WriteString("\n")
 	b.WriteString(fmt.Sprintf("  Called function '%s' requires:\n", e.Callee))
 	for _, effect := range e.CalleeEffects {
@@ -55,7 +55,7 @@ func (e *EffectError) Format() string {
 		b.WriteString(fmt.Sprintf("    - %s\n", effect))
 	}
 
-	// エフェクト伝播経路（暗黙的エフェクトの場合）
+	// Effect propagation path (for implicit effects)
 	if len(e.PropagationPath) > 0 {
 		b.WriteString("\n")
 		b.WriteString("  Effect propagation path:\n")
@@ -72,7 +72,7 @@ func (e *EffectError) Format() string {
 		}
 	}
 
-	// 修正提案
+	// Fix suggestion
 	b.WriteString("\n")
 	b.WriteString("  To fix, add the missing effects to the function declaration:\n")
 	allEffects := combineEffects(e.CallerEffects, e.MissingEffects)
@@ -119,13 +119,13 @@ func BuildPropagationPath(funcName string, functions map[string]*FunctionInfo, v
 
 	var path []PropagationStep
 
-	// 自分自身を追加
+	// Add self to path
 	step := PropagationStep{
 		Function: funcName,
 		Effects:  fn.DeclaredEffects.ToSlice(),
 	}
 
-	// 宣言がない場合は計算されたエフェクトを表示
+	// Show computed effects if no declaration exists
 	if !fn.HasDeclaration && len(fn.ComputedEffects) > 0 {
 		step.Effects = fn.ComputedEffects.ToSlice()
 		step.Source = "computed"
@@ -133,12 +133,12 @@ func BuildPropagationPath(funcName string, functions map[string]*FunctionInfo, v
 
 	path = append(path, step)
 
-	// 呼び出し先の関数を追加
+	// Add called functions
 	for _, call := range fn.CallSites {
 		if _, ok := functions[call.Callee]; ok {
 			subPath := BuildPropagationPath(call.Callee, functions, visited)
 			if len(subPath) > 0 {
-				// sourceを設定
+				// Set source
 				for i := range subPath {
 					if i == 0 {
 						subPath[i].Source = funcName

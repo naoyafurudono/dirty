@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	// unitcheckerはgo vetと同じインターフェースを提供
+	// unitchecker provides the same interface as go vet
 	unitchecker.Main(analyzer.Analyzer)
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/naoyafurudono/dirty/analyzer"
 	"golang.org/x/tools/go/analysis/unitchecker"
 
-	// 標準的なvetチェッカーをインポート
+	// Import standard vet checkers
 	"golang.org/x/tools/go/analysis/passes/asmdecl"
 	"golang.org/x/tools/go/analysis/passes/assign"
 	"golang.org/x/tools/go/analysis/passes/atomic"
@@ -31,9 +31,9 @@ import (
 )
 
 func main() {
-	// 標準のvetチェッカーとdirtyを組み合わせる
+	// Combine standard vet checkers with dirty
 	unitchecker.Main(
-		// 標準のチェッカー
+		// Standard checkers
 		asmdecl.Analyzer,
 		assign.Analyzer,
 		atomic.Analyzer,
@@ -58,7 +58,7 @@ func main() {
 		unsafeptr.Analyzer,
 		unusedresult.Analyzer,
 
-		// dirtyアナライザーを追加
+		// Add dirty analyzer
 		analyzer.Analyzer,
 	)
 }

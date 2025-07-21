@@ -3,6 +3,7 @@ package analyzer
 import (
 	"go/ast"
 	"os"
+	"strings"
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/ast/inspector"
@@ -232,12 +233,5 @@ func (ea *EffectAnalysis) CheckEffects() {
 
 // joinEffects joins effect strings for error messages
 func joinEffects(effects []string) string {
-	result := ""
-	for i, effect := range effects {
-		if i > 0 {
-			result += ", "
-		}
-		result += effect
-	}
-	return result
+	return strings.Join(effects, ", ")
 }
