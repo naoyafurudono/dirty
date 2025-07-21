@@ -41,8 +41,7 @@ func EnhanceWithCrossPackageSupportV3(ea *EffectAnalysis) {
 			}
 
 			// Resolve cross-package calls
-			switch fun := call.Fun.(type) {
-			case *ast.SelectorExpr:
+			if fun, ok := call.Fun.(*ast.SelectorExpr); ok {
 				if ident, ok := fun.X.(*ast.Ident); ok {
 					// Check if it's an imported package
 					if pkgPath, isImport := imports[ident.Name]; isImport {
