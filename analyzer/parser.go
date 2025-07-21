@@ -118,8 +118,12 @@ func (p *Parser) parsePrimary() (EffectExpr, error) {
 			}, nil
 		}
 
-		// Effect reference (Phase 2, but parse it anyway)
-		return &EffectRef{Name: ident}, nil
+		// Treat bare identifier as effect label without target
+		// e.g., "transform" becomes EffectLabel{Operation: "transform", Target: ""}
+		return &EffectLabel{
+			Operation: ident,
+			Target:    "",
+		}, nil
 
 	case TokenLParen:
 		// Parenthesized expression

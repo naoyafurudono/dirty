@@ -26,6 +26,9 @@ func (e *EffectLabel) Eval(_ EffectResolver) (StringSet, error) {
 }
 
 func (e *EffectLabel) String() string {
+	if e.Target == "" {
+		return e.Operation
+	}
 	return fmt.Sprintf("%s[%s]", e.Operation, e.Target)
 }
 
