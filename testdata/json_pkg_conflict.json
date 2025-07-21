@@ -1,0 +1,14 @@
+{
+  "functions": [
+    {
+      "package": "github.com/naoyafurudono/dirty/testdata/src/json_conflict/a",
+      "name": "Process",
+      "effects": "{ file_write[a] }"
+    },
+    {
+      "package": "github.com/naoyafurudono/dirty/testdata/src/json_conflict/b",
+      "name": "Process",
+      "effects": "{ file_write[b] }"
+    }
+  ]
+}
