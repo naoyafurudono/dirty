@@ -1,3 +1,4 @@
+// Package main provides a full vet tool combining standard checkers with dirty effect analysis
 package main
 
 import (

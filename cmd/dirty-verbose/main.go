@@ -1,3 +1,4 @@
+// Package main provides the verbose dirty effect analyzer CLI tool
 package main
 
 import (

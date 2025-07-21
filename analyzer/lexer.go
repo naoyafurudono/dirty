@@ -10,7 +10,7 @@ type TokenType int
 
 // TokenType constants define the types of tokens in effect expressions
 const (
-	TokenEOF     TokenType = iota
+	TokenEOF TokenType = iota
 	TokenLBrace      // {
 	TokenRBrace      // }
 	TokenLParen      // (
