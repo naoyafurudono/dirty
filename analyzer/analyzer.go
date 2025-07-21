@@ -17,6 +17,10 @@ var Analyzer = &analysis.Analyzer{
 	Doc:      "checks that function effect declarations are consistent",
 	Run:      run,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
+	FactTypes: []analysis.Fact{
+		(*PackageEffectsFact)(nil),
+		(*FunctionEffectsFact)(nil),
+	},
 }
 
 func run(pass *analysis.Pass) (any, error) {
@@ -52,13 +56,16 @@ func run(pass *analysis.Pass) (any, error) {
 	effectAnalysis.BuildCallGraph()
 
 	// Phase 2.5: Enhance with cross-package support
-	EnhanceWithCrossPackageSupport(effectAnalysis)
+	EnhanceWithCrossPackageSupportV2(effectAnalysis)
 
 	// Phase 3: Propagate effects
 	effectAnalysis.PropagateEffects()
 
 	// Phase 4: Check effect consistency
 	effectAnalysis.CheckEffects()
+
+	// Phase 5: Export effects as Facts for dependent packages
+	effectAnalysis.ExportPackageEffects()
 
 	return nil, nil
 }
