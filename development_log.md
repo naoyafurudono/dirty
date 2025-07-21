@@ -310,3 +310,33 @@ JSONエフェクト定義を拡張し、パッケージごとに異なるエフ�
 - メソッド記法（`(*Type).Method`）は認識されない
 
 結論：メソッドについても型を区別する仕組みが必要。
+
+### JSON Effects V2設計 ✅
+
+パッケージと型を認識する新しいJSONスキーマを設計：
+
+1. **完全修飾名による識別**
+   - 関数: `package` + `function`
+   - メソッド: `package` + `receiver` + `method`
+
+2. **新しいJSONフォーマット**
+   ```json
+   {
+     "version": "2.0",
+     "effects": [
+       {
+         "package": "github.com/example/services",
+         "receiver": "*UserService",
+         "method": "GetUser",
+         "effects": "{ select[users] }"
+       }
+     ]
+   }
+   ```
+
+3. **設計方針**
+   - 後方互換性なし（破壊的変更）
+   - 完全一致のみ（ワイルドカードなし）
+   - シンプルな実装
+
+詳細設計: `docs/json-effects-v2-design.md`
