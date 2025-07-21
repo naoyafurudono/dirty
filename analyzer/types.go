@@ -3,6 +3,7 @@ package analyzer
 import (
 	"go/ast"
 	"go/token"
+	"slices"
 	"sort"
 )
 
@@ -47,13 +48,7 @@ func (g *CallGraph) AddCall(caller, callee string, pos token.Pos) {
 	})
 
 	// Update reverse mapping
-	found := false
-	for _, c := range g.CalledBy[callee] {
-		if c == caller {
-			found = true
-			break
-		}
-	}
+	found := slices.Contains(g.CalledBy[callee], caller)
 	if !found {
 		g.CalledBy[callee] = append(g.CalledBy[callee], caller)
 	}
